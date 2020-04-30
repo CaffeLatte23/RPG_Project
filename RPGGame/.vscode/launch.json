@@ -1,0 +1,128 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "RPGGame (Debug)",
+			"request": "launch",
+			"preLaunchTask": "RPGGame Win64 Debug Build",
+			"program": "C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\Binaries\\Win64\\UE4-Win64-Debug.exe",
+			"args": [
+			],
+			"cwd": "C:\\Program Files\\UE_4.24",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Program Files\\UE_4.24\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "RPGGame (DebugGame)",
+			"request": "launch",
+			"preLaunchTask": "RPGGame Win64 DebugGame Build",
+			"program": "C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\Binaries\\Win64\\UE4-Win64-DebugGame.exe",
+			"args": [
+			],
+			"cwd": "C:\\Program Files\\UE_4.24",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Program Files\\UE_4.24\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "RPGGame (Development)",
+			"request": "launch",
+			"preLaunchTask": "RPGGame Win64 Development Build",
+			"program": "C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\Binaries\\Win64\\UE4.exe",
+			"args": [
+			],
+			"cwd": "C:\\Program Files\\UE_4.24",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Program Files\\UE_4.24\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "RPGGame (Shipping)",
+			"request": "launch",
+			"preLaunchTask": "RPGGame Win64 Shipping Build",
+			"program": "C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\Binaries\\Win64\\UE4-Win64-Shipping.exe",
+			"args": [
+			],
+			"cwd": "C:\\Program Files\\UE_4.24",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Program Files\\UE_4.24\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "RPGGame (Test)",
+			"request": "launch",
+			"preLaunchTask": "RPGGame Win64 Test Build",
+			"program": "C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\Binaries\\Win64\\UE4-Win64-Test.exe",
+			"args": [
+			],
+			"cwd": "C:\\Program Files\\UE_4.24",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Program Files\\UE_4.24\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "RPGGameEditor (Debug)",
+			"request": "launch",
+			"preLaunchTask": "RPGGameEditor Win64 Debug Build",
+			"program": "C:\\Program Files\\UE_4.24\\Engine\\Binaries\\Win64\\UE4Editor-Win64-Debug.exe",
+			"args": [
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject"
+			],
+			"cwd": "C:\\Program Files\\UE_4.24",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Program Files\\UE_4.24\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "RPGGameEditor (DebugGame)",
+			"request": "launch",
+			"preLaunchTask": "RPGGameEditor Win64 DebugGame Build",
+			"program": "C:\\Program Files\\UE_4.24\\Engine\\Binaries\\Win64\\UE4Editor-Win64-DebugGame.exe",
+			"args": [
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject"
+			],
+			"cwd": "C:\\Program Files\\UE_4.24",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Program Files\\UE_4.24\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "RPGGameEditor (Development)",
+			"request": "launch",
+			"preLaunchTask": "RPGGameEditor Win64 Development Build",
+			"program": "C:\\Program Files\\UE_4.24\\Engine\\Binaries\\Win64\\UE4Editor.exe",
+			"args": [
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject"
+			],
+			"cwd": "C:\\Program Files\\UE_4.24",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Program Files\\UE_4.24\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "Generate Project Files",
+			"type": "clr",
+			"request": "launch",
+			"program": "C:\\Program Files\\UE_4.24\\Engine\\Binaries\\DotNET\\UnrealBuildTool.exe",
+			"console": "externalTerminal",
+			"args": [
+				"-projectfiles",
+				"-vscode",
+				"-project=\"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject\"",
+				"-game",
+				"-engine"
+			],
+			"internalConsoleOptions": "openOnSessionStart",
+			"cwd": "C:\\Program Files\\UE_4.24"
+		}
+	]
+}

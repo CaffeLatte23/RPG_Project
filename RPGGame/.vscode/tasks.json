@@ -1,0 +1,977 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "RPGGame Win32 Debug Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win32",
+				"Debug",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win32 Debug Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win32",
+				"Debug",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGame Win32 Debug Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win32 Debug Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGame",
+				"Win32",
+				"Debug",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win32 DebugGame Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win32",
+				"DebugGame",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win32 DebugGame Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win32",
+				"DebugGame",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGame Win32 DebugGame Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win32 DebugGame Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGame",
+				"Win32",
+				"DebugGame",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win32 Development Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win32",
+				"Development",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win32 Development Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win32",
+				"Development",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGame Win32 Development Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win32 Development Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGame",
+				"Win32",
+				"Development",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win32 Shipping Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win32",
+				"Shipping",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win32 Shipping Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win32",
+				"Shipping",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGame Win32 Shipping Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win32 Shipping Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGame",
+				"Win32",
+				"Shipping",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win32 Test Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win32",
+				"Test",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win32 Test Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win32",
+				"Test",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGame Win32 Test Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win32 Test Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGame",
+				"Win32",
+				"Test",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win64 Debug Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win64",
+				"Debug",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win64 Debug Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win64",
+				"Debug",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGame Win64 Debug Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win64 Debug Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGame",
+				"Win64",
+				"Debug",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win64 DebugGame Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win64",
+				"DebugGame",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win64 DebugGame Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win64",
+				"DebugGame",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGame Win64 DebugGame Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win64 DebugGame Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGame",
+				"Win64",
+				"DebugGame",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win64 Development Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win64",
+				"Development",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win64 Development Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win64",
+				"Development",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGame Win64 Development Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win64 Development Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGame",
+				"Win64",
+				"Development",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win64 Shipping Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win64",
+				"Shipping",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win64 Shipping Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win64",
+				"Shipping",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGame Win64 Shipping Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win64 Shipping Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGame",
+				"Win64",
+				"Shipping",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win64 Test Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win64",
+				"Test",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win64 Test Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"Win64",
+				"Test",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGame Win64 Test Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame Win64 Test Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGame",
+				"Win64",
+				"Test",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame IOS Debug Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"IOS",
+				"Debug",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame IOS Debug Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"IOS",
+				"Debug",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGame IOS Debug Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame IOS Debug Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGame",
+				"IOS",
+				"Debug",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame IOS DebugGame Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"IOS",
+				"DebugGame",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame IOS DebugGame Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"IOS",
+				"DebugGame",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGame IOS DebugGame Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame IOS DebugGame Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGame",
+				"IOS",
+				"DebugGame",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame IOS Development Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"IOS",
+				"Development",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame IOS Development Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"IOS",
+				"Development",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGame IOS Development Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame IOS Development Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGame",
+				"IOS",
+				"Development",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame IOS Shipping Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"IOS",
+				"Shipping",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame IOS Shipping Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"IOS",
+				"Shipping",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGame IOS Shipping Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame IOS Shipping Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGame",
+				"IOS",
+				"Shipping",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame IOS Test Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"IOS",
+				"Test",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame IOS Test Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGame",
+				"IOS",
+				"Test",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGame IOS Test Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGame IOS Test Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGame",
+				"IOS",
+				"Test",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGameEditor Win64 Debug Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGameEditor",
+				"Win64",
+				"Debug",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGameEditor Win64 Debug Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGameEditor",
+				"Win64",
+				"Debug",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGameEditor Win64 Debug Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGameEditor Win64 Debug Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGameEditor",
+				"Win64",
+				"Debug",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGameEditor Win64 DebugGame Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGameEditor",
+				"Win64",
+				"DebugGame",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGameEditor Win64 DebugGame Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGameEditor",
+				"Win64",
+				"DebugGame",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGameEditor Win64 DebugGame Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGameEditor Win64 DebugGame Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGameEditor",
+				"Win64",
+				"DebugGame",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGameEditor Win64 Development Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGameEditor",
+				"Win64",
+				"Development",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGameEditor Win64 Development Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"RPGGameEditor",
+				"Win64",
+				"Development",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"RPGGameEditor Win64 Development Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		},
+		{
+			"label": "RPGGameEditor Win64 Development Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"RPGGameEditor",
+				"Win64",
+				"Development",
+				"C:\\Users\\Csisy\\Documents\\Unreal Projects\\RPG_Project\\RPGGame\\RPGGame.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\UE_4.24"
+			}
+		}
+	]
+}

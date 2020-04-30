@@ -10,7 +10,6 @@
 #include "Weapon/RPGWeaponBase.h"
 #include "Curves/CurveVector.h"
 #include "Animation/AnimInstance.h"
-#include "Interface/RPGUIInterface.h"
 
 ARPGEnemyBase::ARPGEnemyBase()
 {   
@@ -42,7 +41,7 @@ ARPGEnemyBase::ARPGEnemyBase()
     Timeline = new FTimeline();
     Timeline->SetTimelineLength(0.8f);
 
-    const ConstructorHelpers::FObjectFinder<UCurveVector> Interp(TEXT("CurveVector'/Game/RPGGame/DataAsset/Curve/SpawnSizeCurve.SpawnSizeCurve'"));
+    /*const ConstructorHelpers::FObjectFinder<UCurveVector> Interp(TEXT("CurveVector'/Game/RPGGame/DataAsset/Curve/SpawnSizeCurve.SpawnSizeCurve'"));
     FOnTimelineVector ScaleValue;
     ScaleValue.BindUFunction(this , "UpdateRelativeSize");
     Timeline->AddInterpVector(Interp.Object , ScaleValue);
@@ -50,7 +49,7 @@ ARPGEnemyBase::ARPGEnemyBase()
     ///Timeline Finished
     FOnTimelineEvent OnTimelineFinished;
     OnTimelineFinished.BindUFunction(this , "OnSpawnFinish");
-    Timeline->SetTimelineFinishedFunc(OnTimelineFinished);
+    Timeline->SetTimelineFinishedFunc(OnTimelineFinished);*/
 }
 
 void ARPGEnemyBase::BeginPlay()
@@ -62,7 +61,7 @@ void ARPGEnemyBase::BeginPlay()
     {   
         Collision_L->DestroyComponent();
         Collision_R->DestroyComponent();
-        SpawnWeapon();
+        //SpawnWeapon();
     }
     else
     {
@@ -80,21 +79,21 @@ void ARPGEnemyBase::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
     
-    if(Timeline != nullptr && Timeline->IsPlaying())
+    /*if(Timeline != nullptr && Timeline->IsPlaying())
     {
         Timeline->TickTimeline(DeltaTime);
-    }
+    }*/
 }
 
 void ARPGEnemyBase::OnSpawning()
 {  
-    if(Timeline)
+    /*if(Timeline)
     {   
         FTransform Transform = GetActorTransform();
         Transform.SetScale3D(FVector(FinalScale));
         UGameplayStatics::SpawnEmitterAtLocation(GetWorld() , SpawnEffect , Transform);
         Timeline->PlayFromStart();
-    }
+    }*/
     
 }
 

@@ -86,6 +86,11 @@ bool ARPGCharacterBase::IsAlive()
 	return CharStatus.HP > 0;
 }
 
+/*FRPGStatus ARPGCharacterBase::GetOwnerStatus()
+{
+	//return StatusComp->OwnerStatus;
+}*/
+
 EDirectionType ARPGCharacterBase::GetTargetDirection(ARPGCharacterBase* Base , ARPGCharacterBase* Target)
 {   
 	//当たった時の回転の差を,180度で出力

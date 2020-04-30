@@ -46,13 +46,13 @@ public:
     
     FTimerHandle Handle;
 
-	UPROPERTY(EditDefaultsOnly , Category = "Default")
+	UPROPERTY(EditDefaultsOnly , Category = "Spawn")
 	bool bEnableSpawnEffect = true;
 
-	UPROPERTY(EditDefaultsOnly , Category = "Default")
+	UPROPERTY(EditDefaultsOnly , Category = "Spawn")
 	class UParticleSystem* SpawnEffect;
 
-	UPROPERTY(EditDefaultsOnly , Category = "Default")
+	UPROPERTY(EditDefaultsOnly , Category = "Spawn")
 	float FinalScale = 1.0f;
 
 	FOnSpawnFinished OnSpawnFinished;
@@ -69,6 +69,9 @@ public:
 
 	UFUNCTION()
 	void OnSpawnFinish();
+
+	UFUNCTION()
+	void SpawnWeapon();
 
 	UFUNCTION()
 	void UpdateRelativeSize(FVector Value);
@@ -96,6 +99,9 @@ public:
 	UPROPERTY()
 	TMap<EEnableCollisionPoint ,  UCapsuleComponent*> CollisionMap;
 
+	UFUNCTION(BlueprintCallable , Category = "AI")
+	virtual void Attack();
+
 	UFUNCTION(BlueprintCallable , Category = Collsion)
 	void EnableCollision(EEnableCollisionPoint CollisionPoint);
 
@@ -112,6 +118,11 @@ public:
 //////////////////////////////////////////////////////////////////////
 //// InDefeat 
 
+    FOnEnemyDefeated OnEnemyDefeated;
+    
+	UPROPERTY(BlueprintAssignable , Category = "Enemy")
+	FOnEnemyDefeatedBP OnEnemyDefeatedBP;
+
 	UPROPERTY(EditDefaultsOnly , Category = "Drop")
 	float DefeatExp = 5.f;
 
@@ -123,15 +134,15 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsStun = false;
-
-	UFUNCTION(BlueprintCallable , Category = "AI")
-	virtual void Attack();
-
+    
 	UFUNCTION()
-	void SpawnWeapon();
+	void NotifyEnemyDefeated();
 
 	UFUNCTION()
 	void ApplyDamage(AActor* OtherActor);
+
+	UFUNCTION()
+	virtual void DamegeEvent(ARPGCharacterBase* DamageCauser , float Damage);
 
 	UFUNCTION()
     virtual void NotifyTarget_Implementation(bool bTarget) override;

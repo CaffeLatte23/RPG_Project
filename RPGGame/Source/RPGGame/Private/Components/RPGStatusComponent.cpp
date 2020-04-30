@@ -147,9 +147,5 @@ FRPGStatus URPGStatusComponent::LevelUp()
 	return OwnerStatus;
 }
 
-FRPGStatus URPGStatusComponent::GetOwnerStatus()
-{   
-	return OwnerStatus;	
-}
 
 

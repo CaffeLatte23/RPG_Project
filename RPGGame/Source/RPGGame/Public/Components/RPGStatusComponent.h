@@ -55,8 +55,7 @@ public:
 	UFUNCTION()
 	bool SaveStatus();
     
-	UFUNCTION(BlueprintPure , BlueprintCallable , Category = Status)
-	FRPGStatus GetOwnerStatus();
+	
 
 		
 };

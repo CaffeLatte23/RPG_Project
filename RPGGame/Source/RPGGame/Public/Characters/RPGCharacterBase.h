@@ -89,6 +89,9 @@ public:
 	//生存確認
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive();
+
+	UFUNCTION(BlueprintPure , BlueprintCallable , Category = Status)
+	FRPGStatus GetOwnerStatus();
     
 	//ソケットへのアタッチ　共通処理
 	UFUNCTION(BlueprintCallable , Category = "Weapon")

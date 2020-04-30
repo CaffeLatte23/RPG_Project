@@ -15,10 +15,10 @@ URPGStatusComponent::URPGStatusComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	
-	/*//static ConstructorHelpers::FObjectFinder<UDataTable> DataTableFile(TEXT("/Game/RPGGame/DataAsset/DefaultStatusTable.DefaultStatusTable"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableFile(TEXT("/Game/RPGGame/DataAsset/DefaultStatusTable.DefaultStatusTable"));
     if(DataTableFile.Object){
         DefaultTable = DataTableFile.Object;
-    }*/
+    }
 
 	// ...
 }
@@ -147,9 +147,5 @@ FRPGStatus URPGStatusComponent::LevelUp()
 	return OwnerStatus;
 }
 
-FRPGStatus URPGStatusComponent::GetOwnerStatus()
-{   
-	return OwnerStatus;	
-}
 
 

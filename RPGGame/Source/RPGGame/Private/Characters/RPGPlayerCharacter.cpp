@@ -45,10 +45,10 @@ ARPGPlayerCharacter::ARPGPlayerCharacter()
     Timeline->SetTimelineLength(0.5f);
     
     //Curve finder
-    /*const ConstructorHelpers::FObjectFinder<UCurveFloat> InterpAccelarate(TEXT("CurveFloat'/Game/RPGGame/DataAsset/Curve/Curve_Accelarate.Curve_Accelarate'"));
+    const ConstructorHelpers::FObjectFinder<UCurveFloat> InterpAccelarate(TEXT("CurveFloat'/Game/RPGGame/DataAsset/Curve/Curve_Accelarate.Curve_Accelarate'"));
     FOnTimelineFloat AccelarateValue;
     AccelarateValue.BindUFunction(this , "UpdateMoveSpeed");
-    Timeline->AddInterpFloat(InterpAccelarate.Object , AccelarateValue);*/
+    Timeline->AddInterpFloat(InterpAccelarate.Object , AccelarateValue);
 
 }
 
@@ -84,10 +84,10 @@ void ARPGPlayerCharacter::Tick(float DeltaTime )
     Super::Tick(DeltaTime);
     CameraMove();
 
-    /*if(Timeline != nullptr && Timeline->IsPlaying())
+    if(Timeline != nullptr && Timeline->IsPlaying())
     {
         Timeline->TickTimeline(DeltaTime);
-    }*/
+    }
 
 }
 

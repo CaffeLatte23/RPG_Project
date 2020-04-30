@@ -9,11 +9,11 @@
 ARPGSpawnPoint::ARPGSpawnPoint()
 {
 	BillBoard = CreateDefaultSubobject<UBillboardComponent>(TEXT("BillBoard"));
-	/*static ConstructorHelpers::FObjectFinder<UTexture2D> TextureFile(TEXT("Texture2D'/Game/RPGGame/Assets/Point_Spawn.Point_Spawn'"));
+	static ConstructorHelpers::FObjectFinder<UTexture2D> TextureFile(TEXT("Texture2D'/Game/RPGGame/Assets/Point_Spawn.Point_Spawn'"));
 	if(TextureFile.Object)
 	{
 		BillBoard->Sprite = TextureFile.Object;
-	}*/
+	}
 	
 }
 

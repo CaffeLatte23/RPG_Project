@@ -252,10 +252,6 @@ public:
 //戦闘態勢の準備
 DECLARE_MULTICAST_DELEGATE(FOnEnemyFight);
 
-//敵の死亡通知
-//DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEnemyDefeated , float , AActor*);
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEnemyDefeatedBP , float , Exp , AActor* ,  DefeatedActor);
-
 //敵の全滅通知
 DECLARE_MULTICAST_DELEGATE(FOnAllEnemiesDefeated);
 

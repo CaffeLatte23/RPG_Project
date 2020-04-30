@@ -85,10 +85,6 @@ public:
 	//ダメージ計算
 	UFUNCTION()
 	static float CalclateDamage(float BaseDamage , float CriDamage , float CriPercent);
-    
-    //最大ステータスの取得
-	/*UFUNCTION(BlueprintPure , BlueprintCallable  , Category = Status)
-	FRPGStatus GetOwnerStatus();*/
 
 	//生存確認
 	UFUNCTION(BlueprintCallable)

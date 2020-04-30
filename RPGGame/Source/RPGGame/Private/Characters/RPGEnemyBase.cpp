@@ -10,8 +10,7 @@
 #include "Weapon/RPGWeaponBase.h"
 #include "Curves/CurveVector.h"
 #include "Animation/AnimInstance.h"
-#include "RPGPlayerControllerBase.h"
-//#include "Interface/RPGUIInterface.h"
+#include "Interface/RPGUIInterface.h"
 
 ARPGEnemyBase::ARPGEnemyBase()
 {   
@@ -168,7 +167,7 @@ void ARPGEnemyBase::ApplyDamage(AActor* OtherActor)
 {
     if(OtherActor->ActorHasTag("Player") )
     {
-        IRPGCharacterInterface::Execute_OnDamaged(OtherActor , this , BaseDamage + CharStatus.Attack);
+        IRPGCharacterInterface::Execute_OnDamaged(OtherActor , this , BaseDamage);
     }
 }
 
@@ -183,65 +182,6 @@ void ARPGEnemyBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,AAct
 void ARPGEnemyBase::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
     DamagedActors.Reset();
-}
-
-//ダメージ処理の共通処理
-void ARPGEnemyBase::DamegeEvent(ARPGCharacterBase* DamageCauser , float Damage)
-{   
-
-    /*CharStatus.HP -= Damage;
-
-    ARPGPlayerControllerBase* PlayerController = Cast<ARPGPlayerControllerBase>(UGameplayStatics::GetPlayerController(this , 0));
-   
-    if(CharStatus.HP > 0.f)
-    {   
-    }   
-    else
-    {
-        //タイマーの停止
-        if(!GetWorldTimerManager().IsTimerActive(Handle))
-        {
-           GetWorldTimerManager().ClearTimer(Handle);
-        }
-        
-        //死亡アニメーションのために、再生されているモンタージュの停止
-        UAnimInstance* AnimInstance = this->GetMesh()->GetAnimInstance();
-        if(AnimInstance->Montage_IsPlaying(AnimInstance->GetCurrentActiveMontage()))
-        {
-            StopAnimMontage(AnimInstance->GetCurrentActiveMontage());
-        }
-       
-        //死亡判定オン
-        bIsDead = true;
-
-        //生成元のゾーンに死亡通知
-        if(ParentVolume)
-        {
-            ParentVolume->DefeatedActor();
-        }
-       
-        //コントローラの切り離し
-        if(this->GetController())
-        {
-            this->GetController()->UnPossess();
-        }
-       
-        //Destory Timer
-        GetWorldTimerManager().SetTimer(Handle , [this](){
-            if(CurrentWeapon)
-            {
-                CurrentWeapon->Destroy();
-            }
-            this->Destroy();
-        }  , 2.0f , false);
-    }*/
-    
-}
-
-void ARPGEnemyBase::NotifyEnemyDefeated()
-{
-    //OnEnemyDefeated.Broadcast(DefeatExp , this);
-    //OnEnemyDefeatedBP.Broadcast(DefeatExp , this);
 }
 
 void ARPGEnemyBase::NotifyTarget_Implementation(bool bTarget)

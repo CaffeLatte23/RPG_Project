@@ -29,8 +29,5 @@ public:
 
 	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category = "Weapon")
 	float CriticalDamage = 10.f;
-
-	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category = "Weapon")
-	float CriticalPercent = 0.5f;
 	
 };

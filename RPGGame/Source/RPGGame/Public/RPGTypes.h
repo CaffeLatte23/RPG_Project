@@ -185,6 +185,7 @@ struct RPGGAME_API FRPGItemData
 	}
 };
 
+
 USTRUCT(BlueprintType)
 struct FRPGStatus : public FTableRowBase
 {  
@@ -254,6 +255,9 @@ DECLARE_MULTICAST_DELEGATE(FOnEnemyFight);
 
 //敵の全滅通知
 DECLARE_MULTICAST_DELEGATE(FOnAllEnemiesDefeated);
+
+//ステータスの値が変更された場合の通知
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStatusValueChanged);
 
 //ステータスロード完了通知
 DECLARE_DELEGATE(FOnStatusLoaded);

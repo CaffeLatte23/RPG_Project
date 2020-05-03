@@ -10,6 +10,20 @@
 ARPGEnemyBoss::ARPGEnemyBoss()
 {
     this->Tags.Add("Boss");
+    
+    
+}
+
+void ARPGEnemyBoss::Destroyed()
+{
+    ARPGPlayerControllerBase* PlayerController = Cast<ARPGPlayerControllerBase>(UGameplayStatics::GetPlayerController(this , 0));
+
+    if(PlayerController->GetClass()->ImplementsInterface(URPGUIInterface::StaticClass()))
+    {
+        IRPGUIInterface::Execute_BossIsDead(PlayerController,this);    
+    }
+    
+    Super::Destroyed();
 }
 
 void ARPGEnemyBoss::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser  , float Damage)
@@ -28,10 +42,14 @@ void ARPGEnemyBoss::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser  , 
     if(FMath::Clamp(CharStatus.HP , 0.f , StatusComp->OwnerStatus.HP) <= 0.f && !bIsDead)
     {
         bIsDead = true;
-        if(Player->GetClass()->ImplementsInterface(URPGUIInterface::StaticClass()))
+
+        UAnimInstance* AnimInstance = this->GetMesh()->GetAnimInstance();
+
+        if(AnimInstance->Montage_IsPlaying(AnimInstance->GetCurrentActiveMontage()))
         {
-            IRPGUIInterface::Execute_BossIsDead(PlayerController,this);
+            StopAnimMontage(AnimInstance->GetCurrentActiveMontage());
         }
+
 
         if(ParentVolume)
         {

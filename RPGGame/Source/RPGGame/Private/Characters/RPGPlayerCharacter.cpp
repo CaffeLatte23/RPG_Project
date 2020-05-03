@@ -39,7 +39,8 @@ ARPGPlayerCharacter::ARPGPlayerCharacter()
 
     //InventoryComponent
     InventoryComp = CreateDefaultSubobject<URPGInventoryComponent>(TEXT("Inventory Component"));
-
+    
+    
     //TimeLine
     Timeline = new FTimeline();
     Timeline->SetTimelineLength(0.5f);
@@ -56,7 +57,7 @@ void ARPGPlayerCharacter::BeginPlay()
 {
     Super::BeginPlay();
 
-    ARPGPlayerControllerBase* PlayerController = Cast<ARPGPlayerControllerBase>(this->GetController());
+    PlayerController = Cast<ARPGPlayerControllerBase>(this->GetController());
     if(PlayerController)
     { 
         PlayerController->OnEnemyFight.AddLambda([this](){
@@ -89,6 +90,20 @@ void ARPGPlayerCharacter::Tick(float DeltaTime )
         Timeline->TickTimeline(DeltaTime);
     }
 
+    if(bMPAnyChange)
+    {
+        RecoveryMP();
+    }
+
+}
+
+void ARPGPlayerCharacter::RecoveryMP()
+{
+    CharStatus.MP = FMath::FInterpTo(CharStatus.MP , StatusComp->OwnerStatus.MP , GetWorld()->GetDeltaSeconds() , 0.5f);
+    if(CharStatus.MP == StatusComp->OwnerStatus.MP)
+    {
+        bMPAnyChange = false;
+    }
 }
 
 
@@ -263,6 +278,8 @@ void ARPGPlayerCharacter::DashAction()
         }
         //Rolling アクション
         bIsDash = true;
+        bMPAnyChange = false;
+        CharStatus.MP -= 10;
         PlayAnimMontage(RollingMontage , 1.0f , "Default");
         
 
@@ -270,6 +287,7 @@ void ARPGPlayerCharacter::DashAction()
         GetWorldTimerManager().SetTimer(Handle , [this](){
             bIsDash = false;
             bIsAttack = false;
+            bMPAnyChange = true;
         } , 0.39f ,false);
     }
     else
@@ -277,11 +295,26 @@ void ARPGPlayerCharacter::DashAction()
        
        //納刀時はSprintAction 
        bIsDash = true;
+       bMPAnyChange = false;
        if(GetCharacterMovement()->MaxWalkSpeed <= BaseSpeed)
        {   
             Timeline->PlayFromStart();
        }
-       
+
+       if(PlayerController->bOnFight)
+       {   
+           GetWorldTimerManager().SetTimer(SprintTimeHandle , [this](){
+               
+               if(CharStatus.MP > 0 )
+               {
+                   CharStatus.MP -= 1.0f;
+               }
+               else
+               {
+                    EndSprint();    
+               }
+           } , 0.1f , true);
+       }
        
     }
    
@@ -295,6 +328,8 @@ void ARPGPlayerCharacter::EndSprint()
     }
 
     bIsDash = false;
+    GetWorldTimerManager().ClearTimer(SprintTimeHandle);
+    bMPAnyChange = true;
     Timeline->ReverseFromEnd();
 }
 
@@ -592,7 +627,6 @@ AActor* ARPGPlayerCharacter::CheckEnemy()
     TMap<AActor* , float> EnemyLengthMap;
     AActor* ClosestTarget = nullptr;
     float Len = 0.0f;
-    ARPGPlayerControllerBase* PlayerController = Cast<ARPGPlayerControllerBase>(Controller);
 
     if(!OverlappingActors.IsValidIndex(0))
     {   
@@ -649,10 +683,10 @@ void ARPGPlayerCharacter::UseItem(int32 Index)
         return;
     }
     
-    ARPGPlayerControllerBase* PlayerController = Cast<ARPGPlayerControllerBase>(UGameplayStatics::GetPlayerController(this , 0));
     URPGItem* Item = InventoryComp->GetSlottedItem(FRPGItemSlot("Potion" , Index));
     URPGPotionItem* PotionItem = Cast<URPGPotionItem>(Item);
-    float EffectItem = 0.f;
+    float EffectItem = 0.f;                ///評価項目の最大値
+    float CurrentEffectValue = 0.f;        ///現在の評価項目の値
     bool bHUDUpdate = false;
     FTimerHandle TimeHandle;
 
@@ -664,30 +698,35 @@ void ARPGPlayerCharacter::UseItem(int32 Index)
         {
             case ERPGStatusType::HP :
                 EffectItem = StatusComp->OwnerStatus.HP;
+                CurrentEffectValue = CharStatus.HP;
                 bHUDUpdate = true;
                 break;
             
             case ERPGStatusType::MP :
                 EffectItem = StatusComp->OwnerStatus.MP;
+                CurrentEffectValue = CharStatus.MP;
                 bHUDUpdate = true;
                 break;
 
             case ERPGStatusType::Attack :
                 EffectItem = StatusComp->OwnerStatus.Attack;
+                CurrentEffectValue = CharStatus.Attack;
                 break;
 
             case ERPGStatusType::Vitality :
                 EffectItem = StatusComp->OwnerStatus.Vitality;
+                CurrentEffectValue = CharStatus.Vitality;
                 break;
 
             case ERPGStatusType::Agility :
                 EffectItem = StatusComp->OwnerStatus.Agility;
+                CurrentEffectValue = CharStatus.Agility;
                 break;
 
             default :
                 break;
         }
-        CharStatus.CustumizeUpdate(PotionItem->EffectType , EffectItem + EffectItem * PotionItem->EffectValue);
+        CharStatus.CustumizeUpdate(PotionItem->EffectType , CurrentEffectValue + EffectItem * PotionItem->EffectValue);
         if(PlayerController->HUD && bHUDUpdate)
         {
             IRPGUIInterface::Execute_UpdateHP(PlayerController->HUD , CharStatus.HP / StatusComp->OwnerStatus.HP);
@@ -711,25 +750,23 @@ void ARPGPlayerCharacter::UseItem(int32 Index)
 
 void ARPGPlayerCharacter::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser  , float Damage)
 {   
-    ARPGPlayerControllerBase* PlayerController = Cast<ARPGPlayerControllerBase>(UGameplayStatics::GetPlayerController(this , 0));
     FTimerHandle Handle;
 
     this->SetActorRotation(FRotator(0.f , UKismetMathLibrary::FindLookAtRotation( this->GetActorLocation() , DamageCauser->GetActorLocation()).Yaw ,0.f));
+    
+    float VectorCoefficient = (bIsGuard) ? -0.5f : -1.f;
+    FVector LaunchVelocity = GetActorForwardVector() * VectorCoefficient * 1000.f; 
+    this->LaunchCharacter(LaunchVelocity , true , true);
 
+    //ガードしていないとき
+   
+    CharStatus.HP -= -VectorCoefficient * Damage;
+    
     if(PlayerController->HUD )
     {   
         if(PlayerController->HUD->GetClass()->ImplementsInterface(URPGUIInterface::StaticClass()))
         {
             
-            if(!bIsGuard)
-            {   
-                bGuardHit = true;
-                CharStatus.HP -= Damage;
-
-                GetWorldTimerManager().SetTimer(Handle , [this](){
-                    bGuardHit = false;
-                } , 1.5f , false);
-            }
             IRPGUIInterface::Execute_UpdateHP(PlayerController->HUD , CharStatus.HP / StatusComp->OwnerStatus.HP);
 
             if(CharStatus.HP <= 0.f)
@@ -746,8 +783,9 @@ void ARPGPlayerCharacter::OnDamaged_Implementation(ARPGCharacterBase* DamageCaus
                 bIsDamaged = true;
 
                 if(HitReactMotion)
-                {
-                    PlayAnimMontage(HitReactMotion);
+                {   
+                    FName SectionName = (bIsGuard) ? "Guard" : "Arm";
+                    PlayAnimMontage(HitReactMotion , 1.0f , SectionName);
                     GetWorldTimerManager().SetTimer(Handle , [this](){
                         bIsDamaged = false;
                     }, 1.0f , false);

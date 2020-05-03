@@ -57,9 +57,10 @@ void ARPGEnemyMobBase::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser 
    
     UpdateHealth();
     
-    FVector LaunchVelocity = GetActorForwardVector() * -1.f * 800.f; 
+    FVector LaunchVelocity = GetActorForwardVector() * -1.f * 1000.f; 
     this->LaunchCharacter(LaunchVelocity , true , true);
-    
+    HitStopHandle();
+
     if(CharStatus.HP <= 0.f)
     {   
         if(!GetWorldTimerManager().IsTimerPaused(Handle))
@@ -79,6 +80,7 @@ void ARPGEnemyMobBase::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser 
         {
             ParentVolume->DefeatedActor();
         }
+
 
         if(Player->GetClass()->ImplementsInterface(URPGCharacterInterface::StaticClass()))
         {   
@@ -111,6 +113,7 @@ void ARPGEnemyMobBase::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser 
                bIsDamaged = false;
             }, 1.0f , false);
         }
+       
     }
     
 }

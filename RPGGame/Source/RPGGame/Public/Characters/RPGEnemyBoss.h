@@ -19,6 +19,9 @@ public:
 	ARPGEnemyBoss();
 
 	UFUNCTION()
+	virtual void Destroyed() override;
+
+	UFUNCTION()
 	virtual void OnDamaged_Implementation(ARPGCharacterBase* DamageCauser , float Damage) override;
 	
 };

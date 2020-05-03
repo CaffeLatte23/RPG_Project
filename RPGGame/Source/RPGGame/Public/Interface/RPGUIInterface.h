@@ -24,9 +24,6 @@ public:
     UFUNCTION(BlueprintCallable , BlueprintNativeEvent , Category = "Interface")
 	void UpdateHPBar(float value);
 
-	//UFUNCTION(BlueprintCallable , BlueprintNativeEvent , Category = "Interface")
-	//void CloseMainMenu();
-
 	UFUNCTION(BlueprintCallable , BlueprintNativeEvent , Category = "Interface")
 	void UpdateIcons();
 

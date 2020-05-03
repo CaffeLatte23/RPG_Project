@@ -26,8 +26,8 @@ public:
     
 	ARPGEnemyBase();
 	virtual void BeginPlay() override;
-
 	virtual void Tick(float DeltaTime) override;
+	virtual void Destroyed() override;
     
 	UPROPERTY()
 	class ARPGPlayerCharacter* Player;
@@ -51,6 +51,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly , Category = "Default")
 	class UParticleSystem* SpawnEffect;
+
+	UPROPERTY()
+	class UParticleSystem* DestoryEffect;
 
 	UPROPERTY(EditDefaultsOnly , Category = "Default")
 	float FinalScale = 1.0f;
@@ -129,6 +132,9 @@ public:
 
 	UFUNCTION()
 	void SpawnWeapon();
+
+	UFUNCTION(BlueprintImplementableEvent , BlueprintCallable , Category = "Combo")
+	void HitStopHandle();
 
 	UFUNCTION()
 	void ApplyDamage(AActor* OtherActor);

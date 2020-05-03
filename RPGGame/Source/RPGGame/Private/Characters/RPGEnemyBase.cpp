@@ -37,6 +37,12 @@ ARPGEnemyBase::ARPGEnemyBase()
     Collision_L->OnComponentBeginOverlap.AddDynamic(this , &ARPGEnemyBase::OnOverlapBegin);
     Collision_L->OnComponentEndOverlap.AddDynamic(this , &ARPGEnemyBase::OnOverlapEnd);
 
+    const ConstructorHelpers::FObjectFinder<UParticleSystem> FX_Destory(TEXT("ParticleSystem'/Game/ParagonMinions/FX/Particles/Minions/Minion_melee/FX/Death/P_MeleeMinion_Chunks_Ranged.P_MeleeMinion_Chunks_Ranged'"));
+    if(FX_Destory.Object)
+    {
+        DestoryEffect = FX_Destory.Object;
+    }
+
     // タイムライン
     Timeline = new FTimeline();
     Timeline->SetTimelineLength(0.8f);
@@ -98,8 +104,17 @@ void ARPGEnemyBase::OnSpawning()
 }
 
 void ARPGEnemyBase::OnSpawnFinish()
-{
+{   
     OnSpawnFinished.ExecuteIfBound();
+}
+
+void ARPGEnemyBase::Destroyed()
+{
+    FTransform Transform = GetActorTransform();
+    float CapsulehalfHeight = this->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+    Transform.SetLocation(FVector(Transform.GetLocation().X , Transform.GetLocation().Y ,CapsulehalfHeight));
+    Transform.SetScale3D(FVector(FinalScale));
+    UGameplayStatics::SpawnEmitterAtLocation(GetWorld() , DestoryEffect , Transform);
 }
 
 void ARPGEnemyBase::UpdateRelativeSize(FVector Value)
@@ -169,6 +184,16 @@ void ARPGEnemyBase::ApplyDamage(AActor* OtherActor)
         IRPGCharacterInterface::Execute_OnDamaged(OtherActor , this , BaseDamage);
     }
 }
+
+/*void ARPGEnemyBase::HitStopHandle()
+{
+    UGameplayStatics::SetGlobalTimeDilation(GetWorld() , 0.05);
+    
+    FTimerHandle TimerHandle;
+    GetWorldTimerManager().SetTimer(TimerHandle , [this](){
+        UGameplayStatics::SetGlobalTimeDilation(GetWorld() , 1);
+    } , 0.05 * 0.05 , false);
+}*/
 
 void ARPGEnemyBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {

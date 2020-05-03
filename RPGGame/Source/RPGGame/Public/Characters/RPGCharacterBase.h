@@ -32,9 +32,6 @@ public:
 
 	UPROPERTY(EditAnywhere , Category = Combat)
 	float MaxSpeed = 800.f;
-    
-	UPROPERTY(EditAnywhere , BlueprintReadWrite ,  Category = Status)
-	FRPGStatus CharStatus;
 
 public:	
 	// Called every frame
@@ -66,6 +63,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsDamaged = false;
 
+	UPROPERTY(BlueprintReadWrite ,  Category = Status)
+	FRPGStatus CharStatus;
+
 	UPROPERTY(EditAnywhere  , Category = Combo)
 	float ComboPlayRate = 1.0f;
 
@@ -84,7 +84,13 @@ public:
 
 	//ダメージ計算
 	UFUNCTION()
-	static float CalclateDamage(float BaseDamage , float CriDamage , float CriPercent);
+	float CalclateDamage(float BaseDamage , float CriDamage );
+    
+	UPROPERTY(BlueprintReadWrite , Category = Combat)
+	float MinDamagefactor = 1.0f;
+
+	UPROPERTY(BlueprintReadWrite , Category = Combat)
+	float MaxDamagefactor = 1.0f;
 
 	//生存確認
 	UFUNCTION(BlueprintCallable)

@@ -36,7 +36,6 @@ ARPGWeaponBase::ARPGWeaponBase()
 void ARPGWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void ARPGWeaponBase::SetWeaponSpec()
@@ -47,14 +46,12 @@ void ARPGWeaponBase::SetWeaponSpec()
 		UE_LOG(LogRPG , Warning , TEXT("This has No Parent Class"));
 		BaseDamage = 20.f;
 		CriticalDamage = 10.f;
-		CriticalPercent = 0.5f;
 
 		return;
 	}
 
 	BaseDamage = Item->BaseDamage;
 	CriticalDamage = Item->CriticalDamage;
-	CriticalPercent = Item->CriticalPercent;
 	
 }
 
@@ -73,6 +70,7 @@ void ARPGWeaponBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,AAc
 {   
     //オーバーラップしたアクターが、オーナーではなく、オーナーが持つタグを所持していない（敵か味方か)
 	ARPGCharacterBase* OtherChar = Cast<ARPGCharacterBase>(OtherActor);
+	ARPGCharacterBase* WeaponOwner = Cast<ARPGCharacterBase>(this->GetOwner());
     if(OtherChar != this->GetOwner() && !OtherChar->ActorHasTag(OwnerTag) && OtherChar->IsAlive())
 	{   
     //Damage処理
@@ -82,7 +80,7 @@ void ARPGWeaponBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,AAc
             if(OtherChar->GetClass()->ImplementsInterface(URPGCharacterInterface::StaticClass()))
 		    {
                 DamagedActor.Add(OtherChar);
-				static float Damage = ARPGCharacterBase::CalclateDamage(BaseDamage , CriticalDamage , CriticalPercent);
+				float Damage = WeaponOwner->CalclateDamage(BaseDamage , CriticalDamage);
 				IRPGCharacterInterface::Execute_OnDamaged(OtherChar , Cast<ARPGCharacterBase>(this->GetOwner()) , Damage);
 		    }
 		}
@@ -95,8 +93,8 @@ void ARPGWeaponBase::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AAct
 	if(OtherActor != this->GetOwner())
 	{ 
 		if(DamagedActor.Contains(OtherActor))
-		{
-			DamagedActor.Remove(OtherActor);
+		{   
+			//DamagedActor.Remove(OtherActor);
 		}
 	}
 }

@@ -40,15 +40,18 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY()
+	class ARPGPlayerControllerBase* PlayerController;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly , meta = (AllowPrivateAccess = "true"))
 	class URPGInventoryComponent* InventoryComp;
 
 	/*横向きのカメラスピード*/
-	UPROPERTY(VisibleAnywhere , Category=Camera)
+	UPROPERTY(VisibleAnywhere , BlueprintReadWrite ,  Category=Camera)
 	float BaseTurnRate = 45.f;
 
 	/*上向きのカメラスピード*/
-	UPROPERTY(VisibleAnywhere, Category=Camera)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite ,  Category=Camera)
 	float BaseLookUpRate = 45.f;
 
 	FLinearColor BaseEffectColor = FLinearColor( 1.f , 0.142913f , 0.023219f , 0.f);
@@ -96,6 +99,9 @@ public:
 	UPROPERTY()
 	bool bIsDash = false;
 
+	UPROPERTY()
+    bool bMPAnyChange = false; 
+
 	UPROPERTY(BlueprintReadWrite)
 	bool bMoveCheck = false;
     
@@ -114,6 +120,9 @@ public:
 
 	UFUNCTION()
 	void Slot2ItemUse();
+
+	UFUNCTION()
+	void RecoveryMP();
 
 	EDirectionType GetInputDirection();
 
@@ -229,6 +238,10 @@ public:
 
 	UFUNCTION()
 	virtual void DefeatEnemy_Implementation(class ARPGEnemyBase* Enemy) override;
+
+private : 
+    
+	FTimerHandle SprintTimeHandle;
 };
 
 

@@ -73,12 +73,10 @@ void ARPGCharacterBase::MontageJumpSection(UAnimMontage* TargetMontage , FName S
 	}
 }
 
-float ARPGCharacterBase::CalclateDamage(float BaseDamage , float CriDamage , float CriPercent) 
-{
-	float Base = FMath::RandRange(BaseDamage - CriDamage , BaseDamage);
-	float UseRate = FMath::RandRange( 0.f , CriPercent);
-
-	return Base + (int32)(CriDamage * UseRate);
+float ARPGCharacterBase::CalclateDamage(float BaseDamage , float CriDamage) 
+{   
+	float Base = (int32)((BaseDamage + CharStatus.Attack) * FMath::RandRange(MinDamagefactor , MaxDamagefactor));
+	return Base + (int32)(FMath::RandRange(0.f , CriDamage));
 }
 
 bool ARPGCharacterBase::IsAlive()
@@ -90,7 +88,6 @@ FRPGStatus ARPGCharacterBase::GetOwnerStatus()
 {   
 	return StatusComp->OwnerStatus;	
 }
-
 
 EDirectionType ARPGCharacterBase::GetTargetDirection(ARPGCharacterBase* Base , ARPGCharacterBase* Target)
 {   

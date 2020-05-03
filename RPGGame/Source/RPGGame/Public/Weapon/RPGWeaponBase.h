@@ -33,8 +33,7 @@ public:
 	UPROPERTY(BlueprintReadOnly , Category = "Weapon")
 	float CriticalDamage = 10.f;
 
-	UPROPERTY(BlueprintReadOnly , Category = "Weapon")
-	float CriticalPercent = 0.5f;
+
 
 	UPROPERTY()
 	FName OwnerTag = "";

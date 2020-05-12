@@ -59,9 +59,14 @@ public:
 	//死亡判定
 	UPROPERTY(EditAnywhere , BlueprintReadWrite , Category = Combat)
 	bool bIsDead = false;
-
+    
+	//ダメージ判定
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsDamaged = false;
+    
+	//コンボ接続フラグ
+	UPROPERTY(BlueprintReadWrite , Category = Combo)
+	bool bEnableComboPeriod = false;
 
 	UPROPERTY(BlueprintReadWrite ,  Category = Status)
 	FRPGStatus CharStatus;

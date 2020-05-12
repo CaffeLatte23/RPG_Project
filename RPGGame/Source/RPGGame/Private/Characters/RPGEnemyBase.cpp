@@ -36,12 +36,28 @@ ARPGEnemyBase::ARPGEnemyBase()
     Collision_L->SetupAttachment(this->GetMesh() , "Weapon_Left");
     Collision_L->OnComponentBeginOverlap.AddDynamic(this , &ARPGEnemyBase::OnOverlapBegin);
     Collision_L->OnComponentEndOverlap.AddDynamic(this , &ARPGEnemyBase::OnOverlapEnd);
-
-    const ConstructorHelpers::FObjectFinder<UParticleSystem> FX_Destory(TEXT("ParticleSystem'/Game/ParagonMinions/FX/Particles/Minions/Minion_melee/FX/Death/P_MeleeMinion_Chunks_Ranged.P_MeleeMinion_Chunks_Ranged'"));
+    
+    //DestoryEffect
+    const ConstructorHelpers::FObjectFinder<UParticleSystem> FX_Destory(TEXT("ParticleSystem'/Game/RPGGame/Effects/FX_Minion/FX/Particles/Minions/Minion_melee/FX/Death/P_MeleeMinion_Chunks_Ranged.P_MeleeMinion_Chunks_Ranged'"));
     if(FX_Destory.Object)
     {
         DestoryEffect = FX_Destory.Object;
     }
+    
+    //HitEffect
+    const ConstructorHelpers::FObjectFinder<UParticleSystem> FX_Hit(TEXT("ParticleSystem'/Game/RPGGame/Effects/FX_Particle/P_PP.P_PP'"));
+    if(FX_Hit.Object)
+    {
+        HitEffect = FX_Hit.Object;
+    }
+    
+    //HitSound
+    const ConstructorHelpers::FObjectFinder<USoundBase> SFX_Hit(TEXT("SoundCue'/Game/RPGGame/Assets/Sounds/Weapons/Weapon_Hit.Weapon_Hit'"));
+    if(SFX_Hit.Object)
+    {
+        HitSound = SFX_Hit.Object;
+    }
+
 
     // タイムライン
     Timeline = new FTimeline();
@@ -185,15 +201,18 @@ void ARPGEnemyBase::ApplyDamage(AActor* OtherActor)
     }
 }
 
-/*void ARPGEnemyBase::HitStopHandle()
-{
-    UGameplayStatics::SetGlobalTimeDilation(GetWorld() , 0.05);
+void ARPGEnemyBase::HitStopHandle()
+{   
+    float SpawnHeight = this->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+    UGameplayStatics::SpawnEmitterAttached(HitEffect , this->GetMesh() , "TargetPoint");//NAME_None , FVector(0.f,0.f,SpawnHeight) , FRotator() , FVector(0.8f , 0.8f , 0.8f)* FinalScale);
+    UGameplayStatics::SpawnSoundAttached(HitSound , this->GetMesh() , "TargetPoint" , FVector() , FRotator() , EAttachLocation::KeepRelativeOffset , false , 0.3f);
+    UGameplayStatics::SetGlobalTimeDilation(GetWorld() , 0.01);
     
     FTimerHandle TimerHandle;
     GetWorldTimerManager().SetTimer(TimerHandle , [this](){
         UGameplayStatics::SetGlobalTimeDilation(GetWorld() , 1);
-    } , 0.05 * 0.05 , false);
-}*/
+    } , 0.0006f , false);
+}
 
 void ARPGEnemyBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {

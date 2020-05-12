@@ -71,6 +71,7 @@ void ARPGCharacterBase::MontageJumpSection(UAnimMontage* TargetMontage , FName S
 	{   
 		AnimInstance->Montage_JumpToSection(SectionName , TargetMontage);
 	}
+	bEnableComboPeriod = false;
 }
 
 float ARPGCharacterBase::CalclateDamage(float BaseDamage , float CriDamage) 

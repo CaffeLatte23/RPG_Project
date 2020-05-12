@@ -122,7 +122,11 @@ public:
 	void Slot2ItemUse();
 
 	UFUNCTION()
+	void RecoveryMPStart();
+
+	UFUNCTION()
 	void RecoveryMP();
+
 
 	EDirectionType GetInputDirection();
 
@@ -177,8 +181,9 @@ public:
 	UPROPERTY(EditAnywhere , BlueprintReadWrite , Category = Combo)
 	FName JumpSection = "Combo1";
 
-	UPROPERTY(EditAnywhere , BlueprintReadWrite , Category = Combo)
-	bool bEnableComboPeriod = false;
+
+	UPROPERTY(BlueprintReadWrite , Category = Combo)
+	bool bSavingComboConnect = false;
 
 	FTimerHandle ChargeTimerHandle;
 
@@ -192,6 +197,9 @@ public:
 
 	UPROPERTY()
 	bool bIsMaxCharge = false;
+
+	UFUNCTION(BlueprintCallable , Category = "Combo")
+	void ResetComboValue();
 
 	UPROPERTY(EditDefaultsOnly , BlueprintReadWrite , Category = "Default")
 	class UAnimMontage* ChargeMontage;
@@ -212,6 +220,9 @@ public:
     
 	UPROPERTY(BlueprintReadOnly)
 	FTimerHandle SearchHandle;
+
+	UFUNCTION(BlueprintPure , BlueprintCallable ,  Category = "Target")
+	FRotator LookTargetDirection();
 
 	UFUNCTION()
 	void TargetLockEvent();

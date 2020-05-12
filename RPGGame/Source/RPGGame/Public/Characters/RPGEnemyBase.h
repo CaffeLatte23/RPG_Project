@@ -88,6 +88,12 @@ public:
     UPROPERTY()
 	TArray<AActor*> DamagedActors;
 
+	UPROPERTY()
+	class UParticleSystem* HitEffect;
+
+	UPROPERTY()
+	class USoundBase* HitSound;
+
     //ベースのコリジョン
 	UPROPERTY(VisibleAnywhere , meta = (AllowPrivateAccess = "true"))
 	class UCapsuleComponent* Collision_R;
@@ -133,7 +139,7 @@ public:
 	UFUNCTION()
 	void SpawnWeapon();
 
-	UFUNCTION(BlueprintImplementableEvent , BlueprintCallable , Category = "Combo")
+	UFUNCTION(BlueprintCallable , Category = "Combo")
 	void HitStopHandle();
 
 	UFUNCTION()

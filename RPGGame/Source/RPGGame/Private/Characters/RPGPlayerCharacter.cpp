@@ -90,19 +90,33 @@ void ARPGPlayerCharacter::Tick(float DeltaTime )
         Timeline->TickTimeline(DeltaTime);
     }
 
-    if(bMPAnyChange)
-    {
-        RecoveryMP();
-    }
+}
 
+void ARPGPlayerCharacter::RecoveryMPStart()
+{
+    if(GetWorldTimerManager().IsTimerPaused(SprintTimeHandle))
+    {
+        GetWorldTimerManager().UnPauseTimer(SprintTimeHandle);
+    }
+    else
+    {
+        GetWorldTimerManager().SetTimer(SprintTimeHandle , [this](){
+            RecoveryMP();
+        } , 0.01f , true);
+    }
+    
+    
 }
 
 void ARPGPlayerCharacter::RecoveryMP()
 {
-    CharStatus.MP = FMath::FInterpTo(CharStatus.MP , StatusComp->OwnerStatus.MP , GetWorld()->GetDeltaSeconds() , 0.5f);
-    if(CharStatus.MP == StatusComp->OwnerStatus.MP)
+    if(CharStatus.MP <= StatusComp->OwnerStatus.MP )
     {
-        bMPAnyChange = false;
+        CharStatus.MP += 0.1f;
+    }
+    else
+    {
+        GetWorldTimerManager().ClearTimer(SprintTimeHandle);
     }
 }
 
@@ -278,7 +292,13 @@ void ARPGPlayerCharacter::DashAction()
         }
         //Rolling アクション
         bIsDash = true;
-        bMPAnyChange = false;
+        
+        if(GetWorldTimerManager().IsTimerActive(SprintTimeHandle))
+        {
+            GetWorldTimerManager().PauseTimer(SprintTimeHandle);
+        }
+
+
         CharStatus.MP -= 10;
         PlayAnimMontage(RollingMontage , 1.0f , "Default");
         
@@ -286,19 +306,23 @@ void ARPGPlayerCharacter::DashAction()
         FTimerHandle Handle;
         GetWorldTimerManager().SetTimer(Handle , [this](){
             bIsDash = false;
-            bIsAttack = false;
-            bMPAnyChange = true;
-        } , 0.39f ,false);
+            ResetComboValue();
+            RecoveryMPStart();
+        } , 0.5f ,false);
     }
     else
     {   
        
        //納刀時はSprintAction 
        bIsDash = true;
-       bMPAnyChange = false;
+       if(GetWorldTimerManager().IsTimerActive(SprintTimeHandle))
+       {
+            GetWorldTimerManager().PauseTimer(SprintTimeHandle);
+       }
+
        if(GetCharacterMovement()->MaxWalkSpeed <= BaseSpeed)
        {   
-            Timeline->PlayFromStart();
+            Timeline->Play();
        }
 
        if(PlayerController->bOnFight)
@@ -307,13 +331,13 @@ void ARPGPlayerCharacter::DashAction()
                
                if(CharStatus.MP > 0 )
                {
-                   CharStatus.MP -= 1.0f;
+                   CharStatus.MP -= 0.1f;
                }
                else
                {
                     EndSprint();    
                }
-           } , 0.1f , true);
+           } , 0.01f , true);
        }
        
     }
@@ -329,8 +353,8 @@ void ARPGPlayerCharacter::EndSprint()
 
     bIsDash = false;
     GetWorldTimerManager().ClearTimer(SprintTimeHandle);
-    bMPAnyChange = true;
-    Timeline->ReverseFromEnd();
+    RecoveryMPStart();
+    Timeline->Reverse();
 }
 
 void ARPGPlayerCharacter::UpdateMoveSpeed(float Value)
@@ -502,12 +526,12 @@ void ARPGPlayerCharacter::WeaponAttachMethod(int32 Slot)
 
 void ARPGPlayerCharacter::MeleeAttack()
 {   
-    if(!bIsCombat || (!(JumpSection == "Combo1") && !bEnableComboPeriod) || (!bEnableComboPeriod && bIsAttack))
+    if(!bIsCombat)
     {
         return;
     }
-
-
+    
+    //近くに攻撃対象がいた場合、その方向を向く
     if(PreTarget != nullptr)
     {
         AActor* AttackTarget = (bLockedOnTarget)? TargetLockActor : PreTarget;
@@ -515,12 +539,21 @@ void ARPGPlayerCharacter::MeleeAttack()
         SetActorRotation(FRotator(0 , TargetVec.Yaw , TargetVec.Roll));
     }
     
-    
-	if(CurrentAttackMontage)
-	{   
+    if(bEnableComboPeriod)
+    {
+        bSavingComboConnect = true;
+    }
+    else if(!bEnableComboPeriod && !bIsAttack)
+    {
         bIsAttack = true;
-        PlayAnimMontage(CurrentAttackMontage , ComboPlayRate , JumpSection);
-	}
+        PlayAnimMontage(CurrentAttackMontage , ComboPlayRate , "Combo1");
+    }
+    else
+    {
+        return;
+    }
+    
+    
 }
 
 void ARPGPlayerCharacter::ChargeAttackStart()
@@ -569,6 +602,14 @@ void ARPGPlayerCharacter::ChargeAttackEnd()
     
 }
 
+//ローリングなどの途中介入があった時などに使用
+void ARPGPlayerCharacter::ResetComboValue()
+{
+    bEnableComboPeriod = false;
+    JumpSection = "Combo1";
+    bIsAttack = false;
+}
+
 
 ////////////////////////////////////////////////////////
 // Target
@@ -593,11 +634,7 @@ void ARPGPlayerCharacter::TargetLockEvent()
         {
             IRPGCharacterInterface::Execute_NotifyTarget(TargetLockActor , true);
         }
-
-        if(TargetLockActor->ActorHasTag("Boss") && Controller->GetClass()->ImplementsInterface(URPGUIInterface::StaticClass()))
-        {
-            
-        }
+       
    }
    
 }
@@ -673,6 +710,21 @@ AActor* ARPGPlayerCharacter::CheckEnemy()
 
 
     return ClosestTarget;
+}
+
+FRotator ARPGPlayerCharacter::LookTargetDirection()
+{   
+    //Targetの方向を取得
+    if(bLockedOnTarget || PreTarget)
+    {
+        AActor* Target = (bLockedOnTarget) ? TargetLockActor : PreTarget;
+        FRotator DirectionToTarget = UKismetMathLibrary::FindLookAtRotation(GetActorLocation() , Target->GetActorLocation());
+        return DirectionToTarget;
+    }
+    else
+    {
+        return GetActorRotation();
+    }
 }
 
 

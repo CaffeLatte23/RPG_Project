@@ -59,7 +59,11 @@ void ARPGEnemyMobBase::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser 
     
     FVector LaunchVelocity = GetActorForwardVector() * -1.f * 1000.f; 
     this->LaunchCharacter(LaunchVelocity , true , true);
-    HitStopHandle();
+    FTimerHandle HitHandle;
+    GetWorldTimerManager().SetTimer( HitHandle , [this](){
+        HitStopHandle();
+    } , 0.05f , false);
+    
 
     if(CharStatus.HP <= 0.f)
     {   

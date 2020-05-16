@@ -80,6 +80,7 @@ void ARPGEnemyMobBase::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser 
         }
 
         bIsDead = true;
+        IRPGCharacterInterface::Execute_DefeatEnemy(Player , this);
         if(ParentVolume)
         {
             ParentVolume->DefeatedActor();
@@ -91,7 +92,6 @@ void ARPGEnemyMobBase::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser 
             
             if(this->GetController())
             {   
-                IRPGCharacterInterface::Execute_DefeatEnemy(Player , this);
                 this->GetController()->UnPossess();
             }
             

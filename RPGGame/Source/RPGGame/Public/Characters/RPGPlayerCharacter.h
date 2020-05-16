@@ -104,6 +104,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bMoveCheck = false;
+
+	UPROPERTY(BlueprintReadWrite , Category = Camera)
+	bool bCameraUpdate = true;
     
 	//ジャストガードもしくは回避のフラグ
 	UPROPERTY(BlueprintReadWrite)

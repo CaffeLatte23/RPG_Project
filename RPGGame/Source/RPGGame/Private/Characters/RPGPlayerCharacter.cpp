@@ -83,7 +83,11 @@ void ARPGPlayerCharacter::BeginPlay()
 void ARPGPlayerCharacter::Tick(float DeltaTime )
 {
     Super::Tick(DeltaTime);
-    CameraMove();
+    
+    if(bCameraUpdate)
+    {
+        CameraMove();
+    }
 
     if(Timeline != nullptr && Timeline->IsPlaying())
     {
@@ -543,7 +547,7 @@ void ARPGPlayerCharacter::MeleeAttack()
     {
         bSavingComboConnect = true;
     }
-    else if(!bEnableComboPeriod && !bIsAttack)
+    else if(!bEnableComboPeriod && !bIsAttack && JumpSection == "Combo1")
     {
         bIsAttack = true;
         PlayAnimMontage(CurrentAttackMontage , ComboPlayRate , "Combo1");
@@ -644,6 +648,7 @@ void ARPGPlayerCharacter::EndTargetEvent()
     IRPGCharacterInterface::Execute_NotifyTarget(TargetLockActor , false);
     bLockedOnTarget = false;
     TargetLockActor = nullptr;
+    GEngine->AddOnScreenDebugMessage(-1,5,FColor::Red , "Dead");
 }
 
 void ARPGPlayerCharacter::SwitchTarget()

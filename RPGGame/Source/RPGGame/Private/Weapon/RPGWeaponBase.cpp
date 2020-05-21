@@ -82,7 +82,7 @@ void ARPGWeaponBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,AAc
 		    {   
 				UE_LOG(LogRPG , Warning , TEXT("Weapon :  Overlapped"));
                 DamagedActor.Add(OtherChar);
-				float Damage = WeaponOwner->CalclateDamage(BaseDamage , CriticalDamage);
+				float Damage = (OwnerTag == "Player") ? WeaponOwner->CalclateDamage(BaseDamage , CriticalDamage) : BaseDamage;
 				IRPGCharacterInterface::Execute_OnDamaged(OtherChar , Cast<ARPGCharacterBase>(this->GetOwner()) , Damage);
 				
 		    }

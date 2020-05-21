@@ -790,6 +790,13 @@ void ARPGPlayerCharacter::UseItem(int32 Index)
             default :
                 break;
         }
+        
+        if(PotionItem->EffectType == ERPGStatusType::HP || PotionItem->EffectType == ERPGStatusType::MP)
+        {   
+            bool IsItemHP = PotionItem->EffectType == ERPGStatusType::HP;
+            FloatDamageText(EffectItem * PotionItem->EffectValue , this , false , IsItemHP);
+        }
+
         CharStatus.CustumizeUpdate(PotionItem->EffectType , CurrentEffectValue + EffectItem * PotionItem->EffectValue);
         if(PlayerController->HUD && bHUDUpdate)
         {
@@ -830,6 +837,7 @@ void ARPGPlayerCharacter::OnDamaged_Implementation(ARPGCharacterBase* DamageCaus
     //ガードしていないとき
    
     CharStatus.HP -= -VectorCoefficient * Damage;
+    FloatDamageText(Damage , this);
     
     if(PlayerController->HUD )
     {   

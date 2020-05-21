@@ -8,7 +8,6 @@
 #include "Components/CapsuleComponent.h"
 #include "Items/RPGWeaponItem.h"
 #include "Weapon/RPGWeaponBase.h"
-#include "Widgets/WCDamageText.h"
 #include "Curves/CurveVector.h"
 #include "Animation/AnimInstance.h"
 
@@ -154,6 +153,7 @@ void ARPGEnemyBase::SpawnWeapon()
         CurrentWeapon = GetWorld()->SpawnActor<ARPGWeaponBase>(WeaponClass->WeaponActor , GetActorLocation(), GetActorRotation() , Param);
         CurrentWeapon->OwnerTag = "Enemy";
         CurrentWeapon->AttachToComponent(this->GetMesh() , FAttachmentTransformRules::SnapToTargetIncludingScale , "GSEquip_R" );
+        CurrentWeapon->BaseDamage = BaseDamage;
         CollisionMap.Add(EEnableCollisionPoint::Weapon ,CurrentWeapon->Root);
     }
     
@@ -218,14 +218,14 @@ void ARPGEnemyBase::ApplyDamage(AActor* OtherActor)
 {   
     if(OtherActor->ActorHasTag("Player") )
     {
-        IRPGCharacterInterface::Execute_OnDamaged(OtherActor , this , BaseDamage);
+        IRPGCharacterInterface::Execute_OnDamaged(OtherActor , this , BaseDamage + (int32)(FMath::RandRange(0.f , CharStatus.Attack / 2.0f)));
     }
 }
 
 void ARPGEnemyBase::HitStopHandle()
 {   
     float SpawnHeight = this->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
-    UGameplayStatics::SpawnEmitterAttached(HitEffect , this->GetMesh() , "TargetPoint");//NAME_None , FVector(0.f,0.f,SpawnHeight) , FRotator() , FVector(0.8f , 0.8f , 0.8f)* FinalScale);
+    UGameplayStatics::SpawnEmitterAttached(HitEffect , this->GetMesh() , "TargetPoint");
     UGameplayStatics::SpawnSoundAttached(HitSound , this->GetMesh() , "TargetPoint" , FVector() , FRotator() , EAttachLocation::KeepRelativeOffset , false , 0.3f);
     UGameplayStatics::SetGlobalTimeDilation(GetWorld() , 0.01);
     

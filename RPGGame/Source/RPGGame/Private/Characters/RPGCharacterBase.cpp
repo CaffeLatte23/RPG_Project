@@ -124,7 +124,7 @@ EDirectionType ARPGCharacterBase::GetTargetDirection(ARPGCharacterBase* Base , A
 	
 }
 
-void ARPGCharacterBase::FloatDamageText(float Damage , AActor* HitActor)
+void ARPGCharacterBase::FloatDamageText(float Damage , AActor* HitActor , bool IsDamaged , bool IsItemHP)
 {   
     if(FloatingTextClass == nullptr)
 	{
@@ -132,13 +132,15 @@ void ARPGCharacterBase::FloatDamageText(float Damage , AActor* HitActor)
 	}
 
 
-    UUserWidget* FloatingText = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController() , FloatingTextClass);
+    UUIFloatingText* FloatingText = CreateWidget<UUIFloatingText>(GetWorld()->GetFirstPlayerController() , FloatingTextClass);
 	FloatingText->AddToViewport();
 	
 	FVector2D ScreenPosition; 
 	UGameplayStatics::ProjectWorldToScreen(GetWorld()->GetFirstPlayerController() , HitActor->GetActorLocation() ,ScreenPosition , true);
 
 	FloatingText->SetPositionInViewport(ScreenPosition);
+
+	FloatingText->StartFloating(Damage , HitActor , IsDamaged , IsItemHP);
 }
 
 

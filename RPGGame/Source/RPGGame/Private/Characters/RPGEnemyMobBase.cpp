@@ -56,6 +56,7 @@ void ARPGEnemyMobBase::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser 
     CharStatus.HP  -= Damage;
    
     UpdateHealth();
+    FloatDamageText(Damage , this);
     
     FVector LaunchVelocity = GetActorForwardVector() * -1.f * 1000.f; 
     this->LaunchCharacter(LaunchVelocity , true , true);

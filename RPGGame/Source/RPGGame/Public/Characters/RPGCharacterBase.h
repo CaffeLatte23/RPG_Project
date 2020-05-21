@@ -10,6 +10,7 @@
 #include "Weapon/RPGWeaponBase.h"
 #include "Blueprint/UserWidget.h"
 #include "Animation/AnimInstance.h"
+#include "Widgets/UIFloatingText.h"
 #include "Interface/RPGCharacterInterface.h"
 #include "RPGCharacterBase.generated.h"
 
@@ -102,7 +103,7 @@ public:
 	TSubclassOf<UUserWidget> FloatingTextClass;
 
 	UFUNCTION(BlueprintCallable , Category = "UI")
-	void FloatDamageText(float Damage , AActor* HitActor);
+	void FloatDamageText(float Damage , AActor* HitActor ,bool IsDamaged = true , bool IsItemHP = true);
 
 	//生存確認
 	UFUNCTION(BlueprintCallable)

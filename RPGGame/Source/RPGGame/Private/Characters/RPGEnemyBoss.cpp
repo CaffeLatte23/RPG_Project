@@ -28,10 +28,8 @@ void ARPGEnemyBoss::Destroyed()
 
 void ARPGEnemyBoss::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser  , float Damage)
 {
-    if(!bIsGuard)
-    {
-        CharStatus.HP -= Damage;
-    }
+    CharStatus.HP -= Damage;
+    FloatDamageText(Damage , this);
 
     ARPGPlayerControllerBase* PlayerController = Cast<ARPGPlayerControllerBase>(UGameplayStatics::GetPlayerController(this , 0));
     if(PlayerController && PlayerController->GetClass()->ImplementsInterface(URPGUIInterface::StaticClass()))

@@ -26,7 +26,6 @@ ARPGCharacterBase::ARPGCharacterBase()
 	static ConstructorHelpers::FObjectFinder<UClass> FloatTextFinder(TEXT("/Game/RPGGame/Blueprints/Widgets/WB_FloatText.WB_FloatText_C"));
 	if(FloatTextFinder.Object)
 	{
-		UE_LOG(LogRPG , Error , TEXT("Floating Text Class Not find"));
 		FloatingTextClass = FloatTextFinder.Object;
 	}
   

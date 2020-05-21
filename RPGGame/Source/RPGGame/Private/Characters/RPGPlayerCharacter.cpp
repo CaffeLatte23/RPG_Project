@@ -875,6 +875,7 @@ void ARPGPlayerCharacter::DefeatEnemy_Implementation(ARPGEnemyBase* Enemy)
 {  
     CharStatus.Exp -= Enemy->DefeatExp;
     float RemainExp = (CharStatus.Exp < 0) ? -CharStatus.Exp : 0.f;
+    
 
     if(FMath::Clamp(CharStatus.Exp , 0.f , StatusComp->OwnerStatus.Exp) == 0)
     {   

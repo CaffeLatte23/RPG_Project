@@ -221,7 +221,7 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	AActor* PreTarget;
     
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	FTimerHandle SearchHandle;
 
 	UFUNCTION(BlueprintPure , BlueprintCallable ,  Category = "Target")

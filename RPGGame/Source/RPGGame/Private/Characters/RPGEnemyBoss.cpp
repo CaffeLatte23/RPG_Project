@@ -50,6 +50,8 @@ void ARPGEnemyBoss::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser  , 
             StopAnimMontage(AnimInstance->GetCurrentActiveMontage());
         }
 
+        IRPGCharacterInterface::Execute_DefeatEnemy(Player , this);
+
 
         if(ParentVolume)
         {

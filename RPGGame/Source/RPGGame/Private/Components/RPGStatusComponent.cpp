@@ -15,7 +15,7 @@ URPGStatusComponent::URPGStatusComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	
-	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableFile(TEXT("/Game/RPGGame/DataAsset/DefaultStatusTable.DefaultStatusTable"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableFile(TEXT("DataTable'/Game/RPGGame/DataAsset/DT_StatusTable.DT_StatusTable'"));
     if(DataTableFile.Object){
         DefaultTable = DataTableFile.Object;
     }
@@ -50,8 +50,6 @@ bool URPGStatusComponent::LoadStatus()
 	//オーナーがプレイヤーならセーブデータからステータスを取得
     if(Cast<ARPGPlayerCharacter>(Owner))
 	{   
-		
-        
 
 		if(PlayerSaveData) 
 		{   
@@ -63,10 +61,6 @@ bool URPGStatusComponent::LoadStatus()
 			}
           
 			PlayerSaveData->PlayerStatus = OwnerStatus;
-		}
-		else
-		{
-			Owner->CharStatus = OwnerStatus;
 		}
 		
 	}
@@ -104,14 +98,15 @@ void URPGStatusComponent::UpdateStatus()
 
 void URPGStatusComponent::AddDefaultStatus(int32 Lv)
 {
-    FString RowName = "Lv"+ FString::FromInt(Lv);//Owner->DefaultLevel);
+    FString RowName = (Owner->ActorHasTag("Boss"))? "Boss" : "Lv"+ FString::FromInt(Lv);
 	FRPGStatus* Row = DefaultTable->FindRow<FRPGStatus>(*RowName , FString() , true);
 
-
-	if(Row->HP > 0.f)
+	if(Row->HP > 0)
 	{   
 		OwnerStatus = *Row;
-        Owner->CharStatus = *Row;
+        Owner->CharStatus = *Row;	
+
+		SaveStatus();
 		
 		if(OnStatusLoaded.IsBoundToObject(Owner))
 		{

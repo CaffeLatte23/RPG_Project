@@ -97,7 +97,7 @@ void ARPGWeaponBase::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AAct
 	{ 
 		if(DamagedActor.Contains(OtherActor))
 		{   
-			DamagedActor.Remove(OtherActor);
+			//DamagedActor.Remove(OtherActor);
 		}
 	}
 }

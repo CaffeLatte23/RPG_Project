@@ -8,6 +8,7 @@
 #include "RPGPlayerControllerBase.h"
 #include "Components/BoxComponent.h"
 #include "Characters/RPGEnemyBase.h"
+#include "Components/RPGAIManageComponent.h"
 #include "DungeonArchitectRuntime/Public/Builders/SnapMap/Connection/SnapMapConnectionComponent.h"
 #include "DungeonArchitectRuntime/Public/Builders/SnapMap/Connection/SnapMapConnectionActor.h"
 #include "DungeonArchitectRuntime/Public/Builders/SnapMap/Connection/SnapMapConnectionInfo.h"
@@ -17,6 +18,8 @@ AEnemySpawnerVolume::AEnemySpawnerVolume()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+    
+	AIManageComponent = CreateDefaultSubobject<URPGAIManageComponent>(TEXT("AIManage Component"));
 
     SpawnVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("Enemy Spawn Volume"));
 	SpawnVolume->OnComponentBeginOverlap.AddDynamic(this , &AEnemySpawnerVolume::OnOverlapBegin);
@@ -92,8 +95,9 @@ void AEnemySpawnerVolume::SpawnEnemy()
 	bool bMusicChange = false;
 
 	//Spawn可能な場所がない場合、　可能な敵がない場合
-    if(SpawnLocations.Num() <= 0 || SpawnActors.Num() <= 0 || SpawnedNum > 0)
-	{
+    if(SpawnLocations.Num() <= 0 || EnableSpawnClassList.Num() <= 0 || Spawned.Num() > 0)
+	{   
+		UE_LOG(LogRPG , Warning , TEXT("abs"));
 		return;
 	}
     
@@ -104,23 +108,24 @@ void AEnemySpawnerVolume::SpawnEnemy()
 			return;
 		}
 
-	    TSubclassOf<ARPGEnemyBase> SelectedEnemyType = SpawnActors[FMath::RandRange(0,SpawnActors.Num() - 1 )];
+	    TSubclassOf<ARPGEnemyBase> SelectedEnemyType = EnableSpawnClassList[FMath::RandRange(0,EnableSpawnClassList.Num() - 1 )];
 	    FRotator SpawnRotation = UKismetMathLibrary::FindLookAtRotation(Point->GetActorLocation() , UGameplayStatics::GetPlayerCharacter(this , 0)->GetActorLocation());
 
 	    ARPGEnemyBase* Enemy = GetWorld()->SpawnActor<ARPGEnemyBase>(SelectedEnemyType , Point->GetActorLocation() , FRotator(0.f , SpawnRotation.Yaw , 0));
 	    Enemy->SpawnDefaultController();
 		Enemy->ParentVolume = this;
         
-		SpawnedNum++;
+		Spawned.Add(Enemy);
 		bMusicChange = true;
 		bDoOneceCheck = true;
 	}
 
 
-	if(SpawnedNum > 0)
+	if(Spawned.Num() > 0)
 	{   
 		AllDoorLock(true);
-		
+        RoomSpawnCompleted.ExecuteIfBound(Spawned);
+
 		ARPGPlayerControllerBase* PlayerController = Cast<ARPGPlayerControllerBase>(UGameplayStatics::GetPlayerController(this , 0 ));
 		if(PlayerController)
 		{   
@@ -138,13 +143,18 @@ void AEnemySpawnerVolume::SpawnEnemy()
 	
 }
 
-void AEnemySpawnerVolume::DefeatedActor()
+void AEnemySpawnerVolume::DefeatedActor(ARPGEnemyBase* Actor)
 {   
-	SpawnedNum--;
+	if(Spawned.Contains(Actor))
+	{   
+		Spawned.Remove(Actor);
+		AIManageComponent->NotifyDefeated(Actor);
+	}
 
-	if(SpawnedNum == 0)
+	if(Spawned.Num() == 0)
 	{
 	   AllDoorLock(false);
+
 	   ARPGPlayerControllerBase* PlayerController = Cast<ARPGPlayerControllerBase>(UGameplayStatics::GetPlayerController(this , 0));
        FTimerHandle Handle;
 	   GetWorldTimerManager().SetTimer(Handle , [=](){
@@ -155,5 +165,15 @@ void AEnemySpawnerVolume::DefeatedActor()
 	   } , 3.0f , false);
 	   
 	}
+}
+
+void AEnemySpawnerVolume::AttackTaskFinished()
+{   
+	//攻撃指令を出していた全てのアクターの攻撃が終了した場合
+	if(AIManageComponent->GetSelectedActorsNum(ECombatType::Attack) == 0)
+	{
+        AIManageComponent->RefreshManagement();
+	}
+
 }
 

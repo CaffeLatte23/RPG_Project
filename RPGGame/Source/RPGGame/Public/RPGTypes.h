@@ -33,13 +33,6 @@ enum class EDirectionType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EDistance : uint8
-{
-	Nearest,
-	Furthest,
-};
-
-UENUM(BlueprintType)
 enum class ERPGStatusType : uint8
 {
     HP,
@@ -67,13 +60,14 @@ enum class ECombatType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ESpawnerType : uint8
+enum class EGameMode : uint8
 {
-    NotStarted,
-	Spawning,
-	SpawnerAlive,
-	SpawnedAllDead
+	Easy,
+	Normal,
+	Hard
 };
+
+
 
 
 USTRUCT(BlueprintType)
@@ -248,6 +242,20 @@ public:
 
         return;
     }
+};
+
+USTRUCT(BlueprintType)
+struct FAICombatRule : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+    UPROPERTY(EditAnywhere,BlueprintReadWrite ,Category = AI)
+	int32 AttackArrowNum = 0;
+
+	UPROPERTY(EditAnywhere ,BlueprintReadWrite, Category = AI)
+	int32 ReadyArrowNum = 0;
+
 };
 
 //戦闘態勢の準備

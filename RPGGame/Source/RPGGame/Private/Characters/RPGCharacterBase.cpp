@@ -21,6 +21,14 @@ ARPGCharacterBase::ARPGCharacterBase()
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 	GetCharacterMovement()->MaxWalkSpeed = BaseSpeed;
+
+	//floating textの取得
+	static ConstructorHelpers::FObjectFinder<UClass> FloatTextFinder(TEXT("/Game/RPGGame/Blueprints/Widgets/WB_FloatText.WB_FloatText_C"));
+	if(FloatTextFinder.Object)
+	{
+		UE_LOG(LogRPG , Error , TEXT("Floating Text Class Not find"));
+		FloatingTextClass = FloatTextFinder.Object;
+	}
   
 	//ステータスコンポーネントの追加
 	StatusComp = CreateDefaultSubobject<URPGStatusComponent>(TEXT("StatusComponent"));
@@ -116,6 +124,24 @@ EDirectionType ARPGCharacterBase::GetTargetDirection(ARPGCharacterBase* Base , A
 	}
 	
 }
+
+void ARPGCharacterBase::FloatDamageText(float Damage , AActor* HitActor)
+{   
+    if(FloatingTextClass == nullptr)
+	{
+		return;
+	}
+
+
+    UUserWidget* FloatingText = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController() , FloatingTextClass);
+	FloatingText->AddToViewport();
+	
+	FVector2D ScreenPosition; 
+	UGameplayStatics::ProjectWorldToScreen(GetWorld()->GetFirstPlayerController() , HitActor->GetActorLocation() ,ScreenPosition , true);
+
+	FloatingText->SetPositionInViewport(ScreenPosition);
+}
+
 
 
 

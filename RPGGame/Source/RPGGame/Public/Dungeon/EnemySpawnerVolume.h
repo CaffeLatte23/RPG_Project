@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "EnemySpawnerVolume.generated.h"
 
+
+DECLARE_DELEGATE_OneParam(FOnRoomSpawnCompleted , TArray<class ARPGEnemyBase*>);
+
 UCLASS()
 class RPGGAME_API AEnemySpawnerVolume : public AActor
 {
@@ -14,6 +17,9 @@ class RPGGAME_API AEnemySpawnerVolume : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AEnemySpawnerVolume();
+
+	UPROPERTY(VisibleAnywhere , BlueprintReadOnly , Category = AI , meta = (AllowPrivateAccess = "true"))
+	class URPGAIManageComponent* AIManageComponent;
 
 	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category = Spawner)
 	class UBoxComponent* SpawnVolume;
@@ -26,17 +32,19 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category = Spawner)
-	int32 SpawnedNum = 0;
+	FOnRoomSpawnCompleted RoomSpawnCompleted;
 
 	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category = Spawner)
-	TArray<TSubclassOf<class ARPGEnemyBase>> SpawnActors;
+	TArray<TSubclassOf<class ARPGEnemyBase>> EnableSpawnClassList;
 
 	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category = Spawner)
 	TArray<class ARPGSpawnPoint*> SpawnLocations;
 
 	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category = Spawner)
 	TArray<class ASnapMapConnectionActor*> RoomDoors;
+
+	UPROPERTY(EditAnywhere , BlueprintReadOnly , Category = Spawner)
+	TArray<class ARPGEnemyBase*> Spawned;
 
 	UPROPERTY()
 	bool bDoOneceCheck = false;
@@ -54,6 +62,9 @@ public:
 	void SpawnEnemy();
 
 	UFUNCTION()
-	void DefeatedActor();
+	void DefeatedActor(ARPGEnemyBase* Actor);
+
+	UFUNCTION(BlueprintCallable , Category = AI)
+	void AttackTaskFinished();
 
 };

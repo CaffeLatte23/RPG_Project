@@ -8,6 +8,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Items/RPGWeaponItem.h"
 #include "Weapon/RPGWeaponBase.h"
+#include "Widgets/WCDamageText.h"
 #include "Curves/CurveVector.h"
 #include "Animation/AnimInstance.h"
 
@@ -153,12 +154,18 @@ void ARPGEnemyBase::SpawnWeapon()
         CurrentWeapon = GetWorld()->SpawnActor<ARPGWeaponBase>(WeaponClass->WeaponActor , GetActorLocation(), GetActorRotation() , Param);
         CurrentWeapon->OwnerTag = "Enemy";
         CurrentWeapon->AttachToComponent(this->GetMesh() , FAttachmentTransformRules::SnapToTargetIncludingScale , "GSEquip_R" );
+        CollisionMap.Add(EEnableCollisionPoint::Weapon ,CurrentWeapon->Root);
     }
     
 }
 
 void ARPGEnemyBase::UpdateCombatType(ECombatType NewType)
-{
+{   
+    if(CombatType == ECombatType::Attack)
+    {
+        ParentVolume->AttackTaskFinished();
+    }
+
     CombatType = NewType;
 }
 
@@ -175,26 +182,40 @@ void ARPGEnemyBase::Attack()
 
 void ARPGEnemyBase::EnableCollision(EEnableCollisionPoint CollisionPoint)
 {   
-    UCapsuleComponent* Collision = *CollisionMap.Find(CollisionPoint);
-
-    if(Collision)
+    if(CollisionPoint == EEnableCollisionPoint::Weapon)
     {
-        Collision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+        CurrentWeapon->CollisionAble();
     }
+    else
+    {
+        UCapsuleComponent* Collision = *CollisionMap.Find(CollisionPoint);
+        if(Collision)
+        {
+            Collision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+        } 
+    }
+    
 }
 
 void ARPGEnemyBase::DisableCollision(EEnableCollisionPoint CollisionPoint)
 {
-    UCapsuleComponent* Collision = *CollisionMap.Find(CollisionPoint);
 
-    if(Collision)
+    if(CollisionPoint == EEnableCollisionPoint::Weapon)
     {
-        Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        CurrentWeapon->CollisionDisable();
+    }
+    else
+    {
+        UCapsuleComponent* Collision = *CollisionMap.Find(CollisionPoint);
+        if(Collision)
+        {
+            Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        } 
     }
 }
 
 void ARPGEnemyBase::ApplyDamage(AActor* OtherActor)
-{
+{   
     if(OtherActor->ActorHasTag("Player") )
     {
         IRPGCharacterInterface::Execute_OnDamaged(OtherActor , this , BaseDamage);
@@ -211,12 +232,12 @@ void ARPGEnemyBase::HitStopHandle()
     FTimerHandle TimerHandle;
     GetWorldTimerManager().SetTimer(TimerHandle , [this](){
         UGameplayStatics::SetGlobalTimeDilation(GetWorld() , 1);
-    } , 0.0006f , false);
+    } , 0.0004f , false);
 }
 
 void ARPGEnemyBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
-{
-    if(!DamagedActors.Contains(OtherActor))
+{   
+    if(!DamagedActors.Contains(OtherActor) )
     {
         ApplyDamage(OtherActor);
     }

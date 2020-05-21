@@ -63,7 +63,7 @@ public:
 	UPROPERTY(EditDefaultsOnly , BlueprintReadOnly , Category = "Attack")
 	TArray<class UAnimMontage*> CurrentAttackMontage;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly , Category = AI)
 	AEnemySpawnerVolume* ParentVolume = nullptr;
     
 	//スポーン時のエフェクト処理
@@ -105,10 +105,10 @@ public:
 	UPROPERTY()
 	TMap<EEnableCollisionPoint ,  UCapsuleComponent*> CollisionMap;
 
-	UFUNCTION(BlueprintCallable , Category = Collsion)
+	UFUNCTION(BlueprintCallable , Category = "Collsion")
 	void EnableCollision(EEnableCollisionPoint CollisionPoint);
 
-	UFUNCTION(BlueprintCallable , Category = Collsion)
+	UFUNCTION(BlueprintCallable , Category = "Collsion")
 	void DisableCollision(EEnableCollisionPoint CollisionPoint);
 
 	UFUNCTION()

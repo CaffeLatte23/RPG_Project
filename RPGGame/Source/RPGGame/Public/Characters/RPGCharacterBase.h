@@ -8,6 +8,7 @@
 #include "Components/TimelineComponent.h"
 #include "Components/RPGStatusComponent.h"
 #include "Weapon/RPGWeaponBase.h"
+#include "Blueprint/UserWidget.h"
 #include "Animation/AnimInstance.h"
 #include "Interface/RPGCharacterInterface.h"
 #include "RPGCharacterBase.generated.h"
@@ -91,17 +92,23 @@ public:
 	UFUNCTION()
 	float CalclateDamage(float BaseDamage , float CriDamage );
     
-	UPROPERTY(BlueprintReadWrite , Category = Combat)
+	UPROPERTY(BlueprintReadWrite , Category = "Combat")
 	float MinDamagefactor = 1.0f;
 
-	UPROPERTY(BlueprintReadWrite , Category = Combat)
+	UPROPERTY(BlueprintReadWrite , Category = "Combat")
 	float MaxDamagefactor = 1.0f;
+
+	UPROPERTY(BlueprintReadOnly , Category = "UI")
+	TSubclassOf<UUserWidget> FloatingTextClass;
+
+	UFUNCTION(BlueprintCallable , Category = "UI")
+	void FloatDamageText(float Damage , AActor* HitActor);
 
 	//生存確認
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive();
 
-	UFUNCTION(BlueprintPure , BlueprintCallable , Category = Status)
+	UFUNCTION(BlueprintPure , BlueprintCallable , Category = "Status")
 	FRPGStatus GetOwnerStatus();
     
 	//ソケットへのアタッチ　共通処理

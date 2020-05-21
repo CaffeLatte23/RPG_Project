@@ -63,6 +63,7 @@ void ARPGEnemyMobBase::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser 
     GetWorldTimerManager().SetTimer( HitHandle , [this](){
         HitStopHandle();
     } , 0.05f , false);
+    UE_LOG(LogRPG , Warning , TEXT("Enemy :  Ondamaged"));
     
 
     if(CharStatus.HP <= 0.f)
@@ -83,7 +84,7 @@ void ARPGEnemyMobBase::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser 
         IRPGCharacterInterface::Execute_DefeatEnemy(Player , this);
         if(ParentVolume)
         {
-            ParentVolume->DefeatedActor();
+            ParentVolume->DefeatedActor(this);
         }
 
 

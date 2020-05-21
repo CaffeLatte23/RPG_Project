@@ -71,6 +71,7 @@ void ARPGWeaponBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,AAc
     //オーバーラップしたアクターが、オーナーではなく、オーナーが持つタグを所持していない（敵か味方か)
 	ARPGCharacterBase* OtherChar = Cast<ARPGCharacterBase>(OtherActor);
 	ARPGCharacterBase* WeaponOwner = Cast<ARPGCharacterBase>(this->GetOwner());
+	
     if(OtherChar != this->GetOwner() && !OtherChar->ActorHasTag(OwnerTag) && OtherChar->IsAlive())
 	{   
     //Damage処理
@@ -78,10 +79,12 @@ void ARPGWeaponBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,AAc
 		if(!(DamagedActor.Contains(OtherChar)))
 		{
             if(OtherChar->GetClass()->ImplementsInterface(URPGCharacterInterface::StaticClass()))
-		    {
+		    {   
+				UE_LOG(LogRPG , Warning , TEXT("Weapon :  Overlapped"));
                 DamagedActor.Add(OtherChar);
 				float Damage = WeaponOwner->CalclateDamage(BaseDamage , CriticalDamage);
 				IRPGCharacterInterface::Execute_OnDamaged(OtherChar , Cast<ARPGCharacterBase>(this->GetOwner()) , Damage);
+				
 		    }
 		}
 	}
@@ -94,7 +97,7 @@ void ARPGWeaponBase::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AAct
 	{ 
 		if(DamagedActor.Contains(OtherActor))
 		{   
-			//DamagedActor.Remove(OtherActor);
+			DamagedActor.Remove(OtherActor);
 		}
 	}
 }

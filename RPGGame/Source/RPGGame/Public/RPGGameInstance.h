@@ -25,6 +25,9 @@ public:
 	UPROPERTY()
 	class ARPGPlayerCharacter* PlayerCharacter; 
     
+	//ゲームモードレベル（レベル間での連絡用)
+    UPROPERTY()
+	EGameMode GameModeLevel = EGameMode::Normal;
 
 ///Inventory//////////
     UPROPERTY(EditAnywhere , Category = "Inventory")
@@ -57,7 +60,7 @@ public:
 	//Delegate
 	FOnSaveGameLoaded OnSaveGameLoaded;
 
-	UFUNCTION(BlueprintCallable , Category = SaveGame)
+	UFUNCTION(BlueprintPure , Category = SaveGame)
 	URPGSaveGame* GetCurrentSaveGame();
     
 	UFUNCTION()
@@ -74,6 +77,9 @@ public:
     
 	UFUNCTION(BlueprintCallable , Category = Save)
 	void ResetSaveGame();
+
+	UFUNCTION(BlueprintCallable , Category = Level)
+	void RestartLevel();
 
 protected:
     

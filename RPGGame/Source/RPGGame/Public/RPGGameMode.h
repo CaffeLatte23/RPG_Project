@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "RPGGame.h"
 #include "GameFramework/GameModeBase.h"
 #include "RPGGameMode.generated.h"
 
@@ -20,11 +20,16 @@ public:
     
     FAsyncSaveGameToSlotDelegate OnCompleted;
 
+    UPROPERTY()
+    class UDataTable* CombatRuleTable;
+
     UPROPERTY(EditAnywhere , BlueprintReadWrite , Category = GameMode)
     int32 FloorNum = 1;
 
     UPROPERTY(EditAnyWhere , Category = Default)
     FName LevelName;
+
+    FAICombatRule CombatNumRule;
 
     UPROPERTY(BlueprintReadWrite , Category = SaveGame)
     class URPGSaveGame* SaveGame;
@@ -34,6 +39,9 @@ public:
 
     UPROPERTY(EditDefaultsOnly , BlueprintReadWrite , Category = Default)
     TSubclassOf<class UUSerWidget> FloorStartWidget;
+
+    UFUNCTION()
+    void GetGameModeRule(EGameMode GameLevel);
 
     UFUNCTION(BlueprintImplementableEvent ,BlueprintCallable ,  Category = Sound)
     void ChangeMusic(bool bIsConnect);

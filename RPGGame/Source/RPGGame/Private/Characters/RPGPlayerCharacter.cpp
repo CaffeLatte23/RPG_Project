@@ -524,7 +524,9 @@ void ARPGPlayerCharacter::WeaponAttachMethod(int32 Slot)
     CurrentWeapon = EquippedWeapons[Slot];
     CurrentWeaponSlot = CurrentWeapon->Slot;
 
-    CurrentWeapon->AttachToComponent(this->GetMesh() , FAttachmentTransformRules::SnapToTargetNotIncludingScale , "GS_UnEquip");
+    FName AttachSocket = (bIsCombat)? "GSEquip_R" : "GS_UnEquip";
+
+    CurrentWeapon->AttachToComponent(this->GetMesh() , FAttachmentTransformRules::SnapToTargetNotIncludingScale , AttachSocket);
     
 }
 
@@ -533,6 +535,13 @@ void ARPGPlayerCharacter::MeleeAttack()
     if(!bIsCombat)
     {
         return;
+    }
+    
+    //アニメーションの途中で更新されたときの対応
+    UAnimInstance* AnimInstance = this->GetMesh()->GetAnimInstance();
+    if(!AnimInstance->GetCurrentActiveMontage())
+    {
+        ResetComboValue();
     }
     
     //近くに攻撃対象がいた場合、その方向を向く
@@ -556,7 +565,6 @@ void ARPGPlayerCharacter::MeleeAttack()
     {
         return;
     }
-    
     
 }
 
@@ -648,7 +656,6 @@ void ARPGPlayerCharacter::EndTargetEvent()
     IRPGCharacterInterface::Execute_NotifyTarget(TargetLockActor , false);
     bLockedOnTarget = false;
     TargetLockActor = nullptr;
-    GEngine->AddOnScreenDebugMessage(-1,5,FColor::Red , "Dead");
 }
 
 void ARPGPlayerCharacter::SwitchTarget()
@@ -807,6 +814,11 @@ void ARPGPlayerCharacter::UseItem(int32 Index)
 
 void ARPGPlayerCharacter::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser  , float Damage)
 {   
+    if(bIsDead)
+    {
+        return;
+    }
+
     FTimerHandle Handle;
 
     this->SetActorRotation(FRotator(0.f , UKismetMathLibrary::FindLookAtRotation( this->GetActorLocation() , DamageCauser->GetActorLocation()).Yaw ,0.f));
@@ -830,8 +842,10 @@ void ARPGPlayerCharacter::OnDamaged_Implementation(ARPGCharacterBase* DamageCaus
             {
                 bIsDead = true;
                 this->GetCharacterMovement()->DisableMovement();
+                GetWorldTimerManager().ClearTimer(SearchHandle);
                 GetWorldTimerManager().SetTimer(Handle , [=](){
-                     PlayerController->GameOver();
+                    
+                    PlayerController->GameOver();
                 } , 3.0f , false);
                
             }

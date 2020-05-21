@@ -16,7 +16,8 @@ class RPGGAME_API URPGSaveGame : public USaveGame
 	GENERATED_BODY()
 
 public:
-
+    
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = SaveGame)
 	FRPGStatus PlayerStatus;
 
 	FRPGStatus SkillPointRegister;
@@ -32,4 +33,7 @@ public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = SaveGame)
 	int32 FloorNum = 1;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = SaveGame)
+	EGameMode GameLevel = EGameMode::Normal;
 };

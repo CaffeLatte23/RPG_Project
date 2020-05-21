@@ -5,6 +5,7 @@
 #include "RPGAssetManager.h"
 #include "Items/RPGItem.h"
 #include "Characters/RPGPlayerCharacter.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 #include "RPGSaveGame.h"
 
 URPGGameInstance::URPGGameInstance()
@@ -140,4 +141,10 @@ bool URPGGameInstance::WriteSaveGame()
 void URPGGameInstance::ResetSaveGame()
 {
     HandleSaveGameLoaded(nullptr);
+}
+
+void URPGGameInstance::RestartLevel()
+{
+    UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
+    UGameplayStatics::OpenLevel(GetWorld() , "DungeonLevel");
 }

@@ -53,7 +53,7 @@ void ARPGEnemyBoss::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser  , 
 
         if(ParentVolume)
         {
-            ParentVolume->DefeatedActor();
+            ParentVolume->DefeatedActor(this);
         }
 
         if(this->GetController())

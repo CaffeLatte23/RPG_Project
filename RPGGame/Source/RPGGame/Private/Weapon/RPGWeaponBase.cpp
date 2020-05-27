@@ -24,6 +24,7 @@ ARPGWeaponBase::ARPGWeaponBase()
 
 	WeaponCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("WeaponCollision"));
 	WeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	WeaponCollision->SetCollisionResponseToChannel(ECC_Camera , ECR_Ignore);
 	WeaponCollision->SetupAttachment(RootComponent);
     
 	WeaponCollision->OnComponentBeginOverlap.AddDynamic(this , &ARPGWeaponBase::OnOverlapBegin);
@@ -57,7 +58,7 @@ void ARPGWeaponBase::SetWeaponSpec()
 
 void ARPGWeaponBase::CollisionAble()
 {   
-	WeaponCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	WeaponCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
 void ARPGWeaponBase::CollisionDisable()

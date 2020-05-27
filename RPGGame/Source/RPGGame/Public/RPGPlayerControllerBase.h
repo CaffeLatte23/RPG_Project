@@ -48,7 +48,7 @@ public:
 	void UpdateIcons();
 
 	UFUNCTION(BlueprintImplementableEvent , Category = UI)
-	void TargetIsBoss(class ARPGEnemyBase* Actor);
+	class UUserWidget* TargetIsBoss(class ARPGEnemyBase* Actor);
 
 	UFUNCTION(BlueprintImplementableEvent , Category = UI)
 	void BossIsDead(AActor* Actor);

@@ -26,17 +26,11 @@ public:
 	UPROPERTY(VisibleAnywhere , meta = (AllowPrivateAccess = "true"))
 	class UWidgetComponent* HPBar;
 
-	UPROPERTY()
-	class UUIEnemyHP* WB_HP;
-
-	UFUNCTION()
-	void UpdateHealth();
-
 	UFUNCTION(BlueprintCallable , Category = Enemy)
 	void UpdateBarVisibility(bool bIsHidden);
 	
-	UFUNCTION()
-	virtual void OnDamaged_Implementation(ARPGCharacterBase* DamageCauser , float Damage) override;
+	//UFUNCTION()
+	//virtual void OnDamaged_Implementation(ARPGCharacterBase* DamageCauser , float Damage) override;
 
 ///////////////////////////////////
 /// drop

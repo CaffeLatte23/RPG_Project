@@ -16,7 +16,5 @@ class RPGGAME_API UUIEnemyHP : public UUserWidget
 
 public:
 
-	UFUNCTION(BlueprintImplementableEvent , Category = HP)
-	void SetPercent(float Value);
 	
 };

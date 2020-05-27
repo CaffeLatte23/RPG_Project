@@ -129,7 +129,9 @@ public:
 
 	UFUNCTION()
 	void RecoveryMP();
-
+    
+	UFUNCTION(BlueprintCallable , Category = Combat)
+	void TurnToTarget();
 
 	EDirectionType GetInputDirection();
 
@@ -152,7 +154,7 @@ public:
 	TArray<class ARPGWeaponBase*> EquippedWeapons;
     
     //装備イベント
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void EquipAction();
 
 	//武器生成イベント

@@ -51,7 +51,6 @@ void ARPGCharacterBase::PossessedBy(AController* NewController)
 void ARPGCharacterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -89,12 +88,7 @@ float ARPGCharacterBase::CalclateDamage(float BaseDamage , float CriDamage)
 
 bool ARPGCharacterBase::IsAlive()
 {   
-	return CharStatus.HP > 0;
-}
-
-FRPGStatus ARPGCharacterBase::GetOwnerStatus()
-{   
-	return StatusComp->OwnerStatus;	
+	return !bIsDead;
 }
 
 EDirectionType ARPGCharacterBase::GetTargetDirection(ARPGCharacterBase* Base , ARPGCharacterBase* Target)

@@ -23,23 +23,24 @@ ARPGEnemyMobBase::ARPGEnemyMobBase()
 
 void ARPGEnemyMobBase::BeginPlay(){
     Super::BeginPlay();
-    UpdateHealth();
+    
+    if(HPBar->GetUserWidgetObject())
+    {
+        HPWidget = HPBar->GetUserWidgetObject();
+        UpdateHealth();
+    }
 }
 
 void ARPGEnemyMobBase::Destroyed()
 {   
-    DropLoot();
+    if(bIsDead)
+    {
+        DropLoot();
+    }
+    
     Super::Destroyed();
 }
 
-void ARPGEnemyMobBase::UpdateHealth()
-{   
-    WB_HP = Cast<UUIEnemyHP>(HPBar->GetUserWidgetObject());
-    if(WB_HP)
-    {
-        WB_HP->SetPercent(CharStatus.HP / StatusComp->OwnerStatus.HP);
-    }
-}
 
 void ARPGEnemyMobBase::UpdateBarVisibility(bool bIsHidden)
 {   
@@ -50,79 +51,6 @@ void ARPGEnemyMobBase::UpdateBarVisibility(bool bIsHidden)
    
 }
 
-void ARPGEnemyMobBase::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser , float Damage)
-{   
-    
-    CharStatus.HP  -= Damage;
-   
-    UpdateHealth();
-    FloatDamageText(Damage , this);
-    
-    FVector LaunchVelocity = GetActorForwardVector() * -1.f * 1000.f; 
-    this->LaunchCharacter(LaunchVelocity , true , true);
-    FTimerHandle HitHandle;
-    GetWorldTimerManager().SetTimer( HitHandle , [this](){
-        HitStopHandle();
-    } , 0.05f , false);
-    UE_LOG(LogRPG , Warning , TEXT("Enemy :  Ondamaged"));
-    
-
-    if(CharStatus.HP <= 0.f)
-    {   
-        if(!GetWorldTimerManager().IsTimerPaused(Handle))
-        {
-            GetWorldTimerManager().PauseTimer(Handle);
-        }
-
-        UAnimInstance* AnimInstance = this->GetMesh()->GetAnimInstance();
-
-        if(AnimInstance->Montage_IsPlaying(AnimInstance->GetCurrentActiveMontage()))
-        {
-            StopAnimMontage(AnimInstance->GetCurrentActiveMontage());
-        }
-
-        bIsDead = true;
-        IRPGCharacterInterface::Execute_DefeatEnemy(Player , this);
-        if(ParentVolume)
-        {
-            ParentVolume->DefeatedActor(this);
-        }
-
-
-        if(Player->GetClass()->ImplementsInterface(URPGCharacterInterface::StaticClass()))
-        {   
-            
-            if(this->GetController())
-            {   
-                this->GetController()->UnPossess();
-            }
-            
-            GetWorldTimerManager().SetTimer(Handle , [this](){
-                if(CurrentWeapon)
-                {
-                    CurrentWeapon->Destroy();
-                } 
-                this->Destroy();
-            } , 3.0f , false);
-
-        }
-
-    }
-    else
-    {
-        bIsDamaged = true;
-
-        if(HitReactMotion)
-        {
-            PlayAnimMontage(HitReactMotion);
-            GetWorldTimerManager().SetTimer(Handle , [this](){
-               bIsDamaged = false;
-            }, 1.0f , false);
-        }
-       
-    }
-    
-}
 
 void ARPGEnemyMobBase::DropLoot()
 {

@@ -17,11 +17,8 @@ class RPGGAME_API ARPGEnemyBoss : public ARPGEnemyBase
 public:
     
 	ARPGEnemyBoss();
-
-	UFUNCTION()
+    
+	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
-
-	UFUNCTION()
-	virtual void OnDamaged_Implementation(ARPGCharacterBase* DamageCauser , float Damage) override;
 	
 };

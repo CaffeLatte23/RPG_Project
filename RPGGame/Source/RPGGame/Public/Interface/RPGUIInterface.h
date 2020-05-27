@@ -31,7 +31,7 @@ public:
 	void CloseMenu();
 
 	UFUNCTION(BlueprintCallable , BlueprintNativeEvent , Category = "Interface")
-	void TargetIsBoss(class ARPGEnemyBase* Actor);
+	class UUserWidget* TargetIsBoss(class ARPGEnemyBase* Actor);
 
 	UFUNCTION(BlueprintCallable , BlueprintNativeEvent , Category = "Interface")
 	void BossIsDead(AActor* Actor);

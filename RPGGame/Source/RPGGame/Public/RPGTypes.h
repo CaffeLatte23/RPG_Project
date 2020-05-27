@@ -208,6 +208,7 @@ public:
     UPROPERTY(EditAnywhere,BlueprintReadWrite)
     int32 CharLevel;
 
+
     void CustumizeUpdate(ERPGStatusType UpdateType , float Value)
     {
         switch(UpdateType)
@@ -242,6 +243,16 @@ public:
 
         return;
     }
+
+	/** Equality operators */
+	bool operator==(const FRPGStatus& Other) const
+	{
+		return HP == Other.HP && MP == Other.MP && Attack == Other.Attack &&Vitality == Other.Vitality && Agility == Other.Agility && Exp == Other.Exp && CharLevel == Other.CharLevel;
+	}
+	bool operator!=(const FRPGStatus& Other) const
+	{
+		return !(*this == Other);
+	}
 };
 
 USTRUCT(BlueprintType)

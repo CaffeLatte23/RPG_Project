@@ -65,6 +65,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly , Category = AI)
 	AEnemySpawnerVolume* ParentVolume = nullptr;
+
+	UPROPERTY(BlueprintReadWrite , Category = UI)
+	class UUserWidget* HPWidget;
     
 	//スポーン時のエフェクト処理
 	UFUNCTION()
@@ -73,11 +76,15 @@ public:
 	UFUNCTION()
 	void OnSpawnFinish();
 
+
 	UFUNCTION()
 	void UpdateRelativeSize(FVector Value);
 
 	UFUNCTION(BlueprintCallable , Category = AI)
 	void UpdateCombatType(ECombatType NewType);
+
+	UFUNCTION()
+	void UpdateHealth();
 
 //////////////////////////////////////////////////////////////////////
 // Collision(武器がない場合、武器がメッシュについている場合)
@@ -133,6 +140,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsStun = false;
 
+	UPROPERTY(EditAnywhere , BlueprintReadWrite , Category ="Combat")
+	float PushBackValue = 1000.f;
+
 	UFUNCTION(BlueprintCallable , Category = "AI")
 	virtual void Attack();
 
@@ -146,7 +156,19 @@ public:
 	void ApplyDamage(AActor* OtherActor);
 
 	UFUNCTION()
+	void DamageAction();
+
+	UFUNCTION()
+	void DeadAction();
+
+////////////////////////
+//Interface
+////////////////////////
+	UFUNCTION()
     virtual void NotifyTarget_Implementation(bool bTarget) override;
+
+	UFUNCTION()
+	virtual void OnDamaged_Implementation(ARPGCharacterBase* DamageCauser  , float Damage);
 
 };
 

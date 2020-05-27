@@ -14,67 +14,24 @@ ARPGEnemyBoss::ARPGEnemyBoss()
     
 }
 
-void ARPGEnemyBoss::Destroyed()
+void ARPGEnemyBoss::BeginPlay()
 {
-    ARPGPlayerControllerBase* PlayerController = Cast<ARPGPlayerControllerBase>(UGameplayStatics::GetPlayerController(this , 0));
-
-    if(PlayerController->GetClass()->ImplementsInterface(URPGUIInterface::StaticClass()))
-    {
-        IRPGUIInterface::Execute_BossIsDead(PlayerController,this);    
-    }
-    
-    Super::Destroyed();
+    Super::BeginPlay();
 }
 
-void ARPGEnemyBoss::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser  , float Damage)
-{
-    CharStatus.HP -= Damage;
-    FloatDamageText(Damage , this);
-
-    ARPGPlayerControllerBase* PlayerController = Cast<ARPGPlayerControllerBase>(UGameplayStatics::GetPlayerController(this , 0));
-    if(PlayerController && PlayerController->GetClass()->ImplementsInterface(URPGUIInterface::StaticClass()))
+void ARPGEnemyBoss::Destroyed()
+{   
+    if(bIsDead)
     {
-        IRPGUIInterface::Execute_UpdateHP(PlayerController , CharStatus.HP / StatusComp->OwnerStatus.HP);
-    }
-
-    if(FMath::Clamp(CharStatus.HP , 0.f , StatusComp->OwnerStatus.HP) <= 0.f && !bIsDead)
-    {
-        bIsDead = true;
-
-        UAnimInstance* AnimInstance = this->GetMesh()->GetAnimInstance();
-
-        if(AnimInstance->Montage_IsPlaying(AnimInstance->GetCurrentActiveMontage()))
+        ARPGPlayerControllerBase* PlayerController = Cast<ARPGPlayerControllerBase>(UGameplayStatics::GetPlayerController(this , 0));
+        if(PlayerController->GetClass()->ImplementsInterface(URPGUIInterface::StaticClass()))
         {
-            StopAnimMontage(AnimInstance->GetCurrentActiveMontage());
-        }
-
-        IRPGCharacterInterface::Execute_DefeatEnemy(Player , this);
-
-
-        if(ParentVolume)
-        {
-            ParentVolume->DefeatedActor(this);
-        }
-
-        if(this->GetController())
-        {
-            this->GetController()->UnPossess();
-        }
-
-        GetWorldTimerManager().SetTimer(Handle , [this](){
-            this->Destroy();
-        },2.f , false);
-    }
-    else
-    {
-        bIsDamaged = true;
-
-        if(HitReactMotion)
-        {
-            PlayAnimMontage(HitReactMotion);
-            GetWorldTimerManager().SetTimer(Handle , [this](){
-               bIsDamaged = false;
-            }, 1.0f , false);
+            IRPGUIInterface::Execute_BossIsDead(PlayerController,this);    
         }
     }
+    
+
+    
+    
+    Super::Destroyed();
 }

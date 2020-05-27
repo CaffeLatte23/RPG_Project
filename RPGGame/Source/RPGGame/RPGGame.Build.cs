@@ -26,7 +26,8 @@ public class RPGGame : ModuleRules
 				"MoviePlayer",
 				"GameplayAbilities",
 				"GameplayTags",
-				"GameplayTasks"
+				"GameplayTasks",
+				"AIModule"
 			}
 		);
 	}

@@ -8,6 +8,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Items/RPGWeaponItem.h"
 #include "Weapon/RPGWeaponBase.h"
+#include "Interface/RPGUIInterface.h"
 #include "Curves/CurveVector.h"
 #include "Animation/AnimInstance.h"
 
@@ -26,6 +27,7 @@ ARPGEnemyBase::ARPGEnemyBase()
     ///右側　コリジョン
     Collision_R = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Collsion_R"));
     Collision_R->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    Collision_R->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera , ECollisionResponse::ECR_Ignore);
     Collision_R->SetupAttachment(this->GetMesh() , "Weapon_Right");
     Collision_R->OnComponentBeginOverlap.AddDynamic(this , &ARPGEnemyBase::OnOverlapBegin);
     Collision_R->OnComponentEndOverlap.AddDynamic(this , &ARPGEnemyBase::OnOverlapEnd);
@@ -33,6 +35,7 @@ ARPGEnemyBase::ARPGEnemyBase()
     ///左側　コリジョン
     Collision_L = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Collsion_L"));
     Collision_L->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    Collision_L->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera , ECollisionResponse::ECR_Ignore);
     Collision_L->SetupAttachment(this->GetMesh() , "Weapon_Left");
     Collision_L->OnComponentBeginOverlap.AddDynamic(this , &ARPGEnemyBase::OnOverlapBegin);
     Collision_L->OnComponentEndOverlap.AddDynamic(this , &ARPGEnemyBase::OnOverlapEnd);
@@ -105,6 +108,7 @@ void ARPGEnemyBase::Tick(float DeltaTime)
     {
         Timeline->TickTimeline(DeltaTime);
     }
+
 }
 
 void ARPGEnemyBase::OnSpawning()
@@ -167,6 +171,15 @@ void ARPGEnemyBase::UpdateCombatType(ECombatType NewType)
     }
 
     CombatType = NewType;
+}
+
+void ARPGEnemyBase::UpdateHealth()
+{
+    //HPの更新
+    if(HPWidget && HPWidget->GetClass()->ImplementsInterface(URPGUIInterface::StaticClass()))
+    {   
+        IRPGUIInterface::Execute_UpdateHP(HPWidget , CharStatus.HP / ParentStatus.HP);
+    }
 }
 
 void ARPGEnemyBase::Attack()
@@ -251,6 +264,76 @@ void ARPGEnemyBase::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActo
 void ARPGEnemyBase::NotifyTarget_Implementation(bool bTarget)
 {
     LockWC->SetHiddenInGame(!bTarget);
+}
+
+void ARPGEnemyBase::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser  , float Damage)
+{
+    //共通部分の処理
+    if(bIsDead)
+    {
+        return;
+    }
+    CharStatus.HP -= Damage;
+    FloatDamageText(Damage,this);
+
+    UpdateHealth();
+
+    if(CharStatus.HP > 0.f)
+    {
+        DamageAction();
+    }
+    else
+    {
+        DeadAction();
+    }
+    
+}
+
+void ARPGEnemyBase::DamageAction()
+{
+    bIsDamaged = true;
+
+    if(HitReactMotion)
+    {
+        PlayAnimMontage(HitReactMotion);
+        GetWorldTimerManager().SetTimer(Handle , [this](){
+            bIsDamaged = false;
+        }, 1.0f , false);
+    }
+}
+
+void ARPGEnemyBase::DeadAction()
+{
+    bIsDead = true;
+    
+    //モンタージュが再生されていれば、停止させる
+    UAnimInstance* AnimInstance = this->GetMesh()->GetAnimInstance();
+    if(AnimInstance->IsAnyMontagePlaying())
+    {
+        StopAnimMontage(AnimInstance->GetCurrentActiveMontage());
+    }
+    
+    //他への死亡通知
+    IRPGCharacterInterface::Execute_DefeatEnemy(Player , this);
+    if(ParentVolume)
+    {
+        ParentVolume->DefeatedActor(this);
+    }
+    
+    //動かないようにコントローラーを排除
+    if(this->GetController())
+    {   
+        this->GetController()->UnPossess();
+    }
+
+    //自分の破壊       
+    GetWorldTimerManager().SetTimer(Handle , [this](){
+    if(CurrentWeapon)
+    {
+        CurrentWeapon->Destroy();
+    } 
+    this->Destroy();
+    } , 3.0f , false);
 }
 
 

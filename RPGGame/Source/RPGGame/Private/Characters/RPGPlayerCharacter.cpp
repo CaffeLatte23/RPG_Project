@@ -114,7 +114,7 @@ void ARPGPlayerCharacter::RecoveryMPStart()
 
 void ARPGPlayerCharacter::RecoveryMP()
 {
-    if(CharStatus.MP <= StatusComp->OwnerStatus.MP )
+    if(CharStatus.MP <= ParentStatus.MP )
     {
         CharStatus.MP += 0.1f;
     }
@@ -143,7 +143,7 @@ void ARPGPlayerCharacter::CameraMove()
         {   
             FRotator TargetRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation() , TargetLockActor->GetActorLocation());
             FRotator ControlRot = FMath::RInterpTo(GetControlRotation() , TargetRot , GetWorld()->GetDeltaSeconds() , InterpSpeed);
-            Controller->SetControlRotation(FRotator(FMath::Clamp( ControlRot.Pitch , -60.f , 60.f), ControlRot.Yaw , 0.f));
+            Controller->SetControlRotation(FRotator(FMath::Clamp( ControlRot.Pitch , -20.f , 20.f), ControlRot.Yaw , 0.f));
         }
         
 
@@ -172,16 +172,26 @@ void ARPGPlayerCharacter::CameraMove()
 }
 
 void ARPGPlayerCharacter::UpdateCameraType(bool bTarget)
-{
-    float FOV = (bTarget) ? 95.f : 90.f;
-    float ArmLen = (bTarget) ? 420.f : 400.f;
-    FRotator CameraRot = (bTarget) ? FRotator(-15.f ,0.f,0.f) : FRotator( -10.f ,0.f , 0.f);
-    FVector TargetPos = (bTarget) ? FVector(0.f,0.f,30.f) : FVector(0.f,0.f,0.f);
+{ 
+    if(!bIsDead)
+    {
+        float FOV = (bIsCombat) ? 95.f : 90.f;
+        float ArmLen = (bIsCombat) ? 420.f : 400.f;
+        FRotator CameraRot = (bTarget) ? FRotator(-15.f ,0.f,0.f) : FRotator( -10.f ,0.f , 0.f);
+        FVector TargetPos = (bTarget) ? FVector(0.f,0.f,30.f) : FVector(0.f,0.f,0.f);
     
-    CameraBoom->TargetOffset = FMath::VInterpTo(CameraBoom->TargetOffset,TargetPos , GetWorld()->GetDeltaSeconds() , 1.0f);
-    CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength , ArmLen , GetWorld()->GetDeltaSeconds() , 1.0f);
-    FollowCamera->SetRelativeRotation(FMath::RInterpTo(FollowCamera->GetRelativeRotation() , CameraRot , GetWorld()->GetDeltaSeconds() , 1.0f));
-    FollowCamera->SetFieldOfView(FMath::FInterpTo(FollowCamera->FieldOfView , FOV , GetWorld()->GetDeltaSeconds() , 1.0f));
+        CameraBoom->TargetOffset = FMath::VInterpTo(CameraBoom->TargetOffset,TargetPos , GetWorld()->GetDeltaSeconds() , 1.0f);
+        CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength , ArmLen , GetWorld()->GetDeltaSeconds() , 1.0f);
+        FollowCamera->SetRelativeRotation(FMath::RInterpTo(FollowCamera->GetRelativeRotation() , CameraRot , GetWorld()->GetDeltaSeconds() , 1.0f));
+        FollowCamera->SetFieldOfView(FMath::FInterpTo(FollowCamera->FieldOfView , FOV , GetWorld()->GetDeltaSeconds() , 1.0f));
+    }
+    else
+    {
+        float ArmLen = 500.f;
+        CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength , ArmLen , GetWorld()->GetDeltaSeconds() , 3.0f);
+    }
+    
+    
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -205,7 +215,6 @@ void ARPGPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
     PlayerInputComponent->BindAction("Attack" , IE_Pressed , this ,&ARPGPlayerCharacter::MeleeAttack);
     PlayerInputComponent->BindAction("TargetLock" , IE_Pressed , this , &ARPGPlayerCharacter::TargetLockEvent);
     PlayerInputComponent->BindAction("SwitchTarget" , IE_Pressed , this , &ARPGPlayerCharacter::SwitchTarget);
-    PlayerInputComponent->BindAction("Equip" , IE_Pressed , this ,&ARPGPlayerCharacter::EquipAction);
     PlayerInputComponent->BindAction("Guard" , IE_Pressed , this , &ARPGPlayerCharacter::GuardAction);
     PlayerInputComponent->BindAction("Guard" , IE_Released , this , &ARPGPlayerCharacter::GuardAction);
     PlayerInputComponent->BindAction("ChargeAttack" , IE_Pressed , this , &ARPGPlayerCharacter::ChargeAttackStart);
@@ -536,7 +545,7 @@ void ARPGPlayerCharacter::MeleeAttack()
     {
         return;
     }
-    
+
     //アニメーションの途中で更新されたときの対応
     UAnimInstance* AnimInstance = this->GetMesh()->GetAnimInstance();
     if(!AnimInstance->GetCurrentActiveMontage())
@@ -544,26 +553,15 @@ void ARPGPlayerCharacter::MeleeAttack()
         ResetComboValue();
     }
     
-    //近くに攻撃対象がいた場合、その方向を向く
-    if(PreTarget != nullptr)
-    {
-        AActor* AttackTarget = (bLockedOnTarget)? TargetLockActor : PreTarget;
-        FRotator TargetVec = UKismetMathLibrary::FindLookAtRotation(GetActorLocation() , AttackTarget->GetActorLocation());
-        SetActorRotation(FRotator(0 , TargetVec.Yaw , TargetVec.Roll));
-    }
-    
     if(bEnableComboPeriod)
     {
         bSavingComboConnect = true;
     }
     else if(!bEnableComboPeriod && !bIsAttack && JumpSection == "Combo1")
-    {
+    {   
         bIsAttack = true;
+        TurnToTarget();
         PlayAnimMontage(CurrentAttackMontage , ComboPlayRate , "Combo1");
-    }
-    else
-    {
-        return;
     }
     
 }
@@ -622,6 +620,17 @@ void ARPGPlayerCharacter::ResetComboValue()
     bIsAttack = false;
 }
 
+void ARPGPlayerCharacter::TurnToTarget()
+{
+    //近くに攻撃対象がいた場合、その方向を向く
+    if(PreTarget != nullptr)
+    {
+        AActor* AttackTarget = (bLockedOnTarget)? TargetLockActor : PreTarget;
+        FRotator TargetVec = UKismetMathLibrary::FindLookAtRotation(GetActorLocation() , AttackTarget->GetActorLocation());
+        SetActorRotation(FRotator(0 , TargetVec.Yaw , TargetVec.Roll));
+    }
+}
+
 
 ////////////////////////////////////////////////////////
 // Target
@@ -662,9 +671,8 @@ void ARPGPlayerCharacter::SwitchTarget()
 {
     if(bLockedOnTarget && (PreTarget != TargetLockActor))
     {   
-        IRPGCharacterInterface::Execute_NotifyTarget(TargetLockActor , false);
-        TargetLockActor = PreTarget;
-        IRPGCharacterInterface::Execute_NotifyTarget(TargetLockActor , true);
+        EndTargetEvent();
+        TargetLockEvent();
     }
 }
 
@@ -761,46 +769,49 @@ void ARPGPlayerCharacter::UseItem(int32 Index)
         switch(PotionItem->EffectType)
         {
             case ERPGStatusType::HP :
-                EffectItem = StatusComp->OwnerStatus.HP;
+                EffectItem = ParentStatus.HP;
                 CurrentEffectValue = CharStatus.HP;
                 bHUDUpdate = true;
                 break;
             
             case ERPGStatusType::MP :
-                EffectItem = StatusComp->OwnerStatus.MP;
+                EffectItem = ParentStatus.MP;
                 CurrentEffectValue = CharStatus.MP;
                 bHUDUpdate = true;
                 break;
 
             case ERPGStatusType::Attack :
-                EffectItem = StatusComp->OwnerStatus.Attack;
+                EffectItem = ParentStatus.Attack;
                 CurrentEffectValue = CharStatus.Attack;
                 break;
 
             case ERPGStatusType::Vitality :
-                EffectItem = StatusComp->OwnerStatus.Vitality;
+                EffectItem = ParentStatus.Vitality;
                 CurrentEffectValue = CharStatus.Vitality;
                 break;
 
             case ERPGStatusType::Agility :
-                EffectItem = StatusComp->OwnerStatus.Agility;
+                EffectItem = ParentStatus.Agility;
                 CurrentEffectValue = CharStatus.Agility;
                 break;
 
             default :
                 break;
         }
+
+        float EffectValue = CurrentEffectValue + EffectItem * PotionItem->EffectValue;
         
         if(PotionItem->EffectType == ERPGStatusType::HP || PotionItem->EffectType == ERPGStatusType::MP)
         {   
             bool IsItemHP = PotionItem->EffectType == ERPGStatusType::HP;
             FloatDamageText(EffectItem * PotionItem->EffectValue , this , false , IsItemHP);
+            EffectValue = FMath::Clamp(EffectValue , 0.f , EffectItem);
         }
 
-        CharStatus.CustumizeUpdate(PotionItem->EffectType , CurrentEffectValue + EffectItem * PotionItem->EffectValue);
+        CharStatus.CustumizeUpdate(PotionItem->EffectType , EffectValue);
         if(PlayerController->HUD && bHUDUpdate)
         {
-            IRPGUIInterface::Execute_UpdateHP(PlayerController->HUD , CharStatus.HP / StatusComp->OwnerStatus.HP);
+            IRPGUIInterface::Execute_UpdateHP(PlayerController->HUD , CharStatus.HP / ParentStatus.HP);
         }
         
         InventoryComp->RemoveInventoryItem(PotionItem , 1);
@@ -830,13 +841,13 @@ void ARPGPlayerCharacter::OnDamaged_Implementation(ARPGCharacterBase* DamageCaus
 
     this->SetActorRotation(FRotator(0.f , UKismetMathLibrary::FindLookAtRotation( this->GetActorLocation() , DamageCauser->GetActorLocation()).Yaw ,0.f));
     
-    float VectorCoefficient = (bIsGuard) ? -0.5f : -1.f;
-    FVector LaunchVelocity = GetActorForwardVector() * VectorCoefficient * 1000.f; 
+    float VectorCoefficient = (bIsGuard) ? 0.5f : 1.f;
+    FVector LaunchVelocity = (-1.0f)*GetActorForwardVector() * VectorCoefficient * 1000.f; 
     this->LaunchCharacter(LaunchVelocity , true , true);
 
     //ガードしていないとき
    
-    CharStatus.HP -= -VectorCoefficient * Damage;
+    CharStatus.HP -= VectorCoefficient * Damage;
     FloatDamageText(Damage , this);
     
     if(PlayerController->HUD )
@@ -844,16 +855,26 @@ void ARPGPlayerCharacter::OnDamaged_Implementation(ARPGCharacterBase* DamageCaus
         if(PlayerController->HUD->GetClass()->ImplementsInterface(URPGUIInterface::StaticClass()))
         {
             
-            IRPGUIInterface::Execute_UpdateHP(PlayerController->HUD , CharStatus.HP / StatusComp->OwnerStatus.HP);
+            IRPGUIInterface::Execute_UpdateHP(PlayerController->HUD , CharStatus.HP / ParentStatus.HP);
 
             if(CharStatus.HP <= 0.f)
             {
+                UAnimInstance* AnimInstance = this->GetMesh()->GetAnimInstance();
+                if(AnimInstance->IsAnyMontagePlaying())
+                {
+                    StopAnimMontage(AnimInstance->GetCurrentActiveMontage());
+                }
+                
+                
                 bIsDead = true;
+                
+                DisableInput(PlayerController);
+
                 this->GetCharacterMovement()->DisableMovement();
                 GetWorldTimerManager().ClearTimer(SearchHandle);
                 GetWorldTimerManager().SetTimer(Handle , [=](){
-                    
                     PlayerController->GameOver();
+                    EnableInput(PlayerController);
                 } , 3.0f , false);
                
             }
@@ -883,20 +904,28 @@ void ARPGPlayerCharacter::DefeatEnemy_Implementation(ARPGEnemyBase* Enemy)
 {  
     CharStatus.Exp -= Enemy->DefeatExp;
     float RemainExp = (CharStatus.Exp < 0) ? -CharStatus.Exp : 0.f;
-    
 
-    if(FMath::Clamp(CharStatus.Exp , 0.f , StatusComp->OwnerStatus.Exp) == 0)
+    if(FMath::Clamp(CharStatus.Exp , 0.f , ParentStatus.Exp) == 0)
     {   
         if(StatusComp)
-        {
-            CharStatus = StatusComp->LevelUp();
+        {   
+           
+            StatusComp->LevelUp(ParentStatus);
+            CharStatus = ParentStatus;
+
+            if(OnLevelUp.IsBound())
+            {
+                OnLevelUp.Broadcast(ParentStatus.CharLevel);
+            }
         }
+        
     }
+    
     
     CharStatus.Exp -= RemainExp;
     if(TargetLockActor == Enemy)
-    {
-        EndTargetEvent();
+    {   
+       EndTargetEvent();     
     }
 
 }

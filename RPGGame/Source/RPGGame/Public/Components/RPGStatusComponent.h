@@ -29,7 +29,7 @@ public:
     class ARPGCharacterBase* Owner;
 	
 	//オーナーのステータス変数
-	UPROPERTY(EditAnywhere , BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite)
     FRPGStatus OwnerStatus;
     
 	//スキルポイント割り振り用
@@ -44,16 +44,13 @@ public:
 	UFUNCTION()
 	void AddDefaultStatus(int32 Lv);
 
-	FRPGStatus LevelUp();
-
-	UFUNCTION()
-	void UpdateStatus();
+	void LevelUp(FRPGStatus& Status);
 
 	UFUNCTION()
 	bool LoadStatus();
 
-	UFUNCTION()
-	bool SaveStatus();
+	UFUNCTION(BlueprintCallable , Category = "Status")
+	void SaveStatus();
     
 	
 

@@ -6,6 +6,7 @@
 #include "RPGSaveGame.h"
 #include "RPGGameMode.h"
 #include "Characters/RPGPlayerCharacter.h"
+#include "RPGPlayerControllerBase.h"
 #include "Engine/DataTable.h"
 
 
@@ -28,7 +29,14 @@ URPGStatusComponent::URPGStatusComponent()
 void URPGStatusComponent::BeginPlay()
 {   
 	LoadStatus();
-	Super::BeginPlay();	
+	Super::BeginPlay();
+
+	ARPGPlayerControllerBase* PlayerController = Cast<ARPGPlayerControllerBase>(Owner->GetController());
+	if(PlayerController)
+	{
+		PlayerController->OnAllEnemiesDefeated.AddUObject(this , &URPGStatusComponent::SaveStatus);
+	}
+    
 }
 
 bool URPGStatusComponent::LoadStatus()
@@ -53,47 +61,59 @@ bool URPGStatusComponent::LoadStatus()
 
 		if(PlayerSaveData) 
 		{   
-			//データがあれば取得、なければデフォルトで追加したステータスを保存
-			if( PlayerSaveData->PlayerStatus.CharLevel > 1)
-		    {   
-			    OwnerStatus = PlayerSaveData->PlayerStatus;
-			    return true;
+			//データがあれば取得、なければデフォルトで追加したステータスを保存 
+			Owner->ParentStatus = PlayerSaveData->PlayerStatus;	
+			Owner->CharStatus = Owner->ParentStatus;
+
+			if(PlayerSaveData->RemainExp > 0.f)
+			{
+				Owner->CharStatus.Exp = PlayerSaveData->RemainExp;
+				
 			}
-          
-			PlayerSaveData->PlayerStatus = OwnerStatus;
+			
 		}
 		
+	}
+
+	if(OnStatusLoaded.IsBoundToObject(Owner))
+	{
+		OnStatusLoaded.Execute();	
 	}
 	
 	
 	return true;
 }
 
-bool URPGStatusComponent::SaveStatus()
+void URPGStatusComponent::SaveStatus()
 {
 	UWorld* World = GetWorld();
 	URPGGameInstance* GameInstance = World ? World->GetGameInstance<URPGGameInstance>() : nullptr;
 
 	if (!GameInstance)
 	{
-		return false;
+		return;
 	}
 
 	URPGSaveGame* CurrentSaveGame = GameInstance->GetCurrentSaveGame();
+	ARPGPlayerCharacter* Player = Cast<ARPGPlayerCharacter>(Owner);
+	
 	if(CurrentSaveGame)
 	{   
-		CurrentSaveGame->PlayerStatus = OwnerStatus;
+		CurrentSaveGame->PlayerStatus = Owner->ParentStatus;
+		if(Owner->ParentStatus.Exp > Owner->CharStatus.Exp)
+		{
+			CurrentSaveGame->RemainExp = Owner->CharStatus.Exp;
+		
+			UE_LOG(LogRPG , Warning , TEXT("Exp over"));
+		}
+
 
 		GameInstance->WriteSaveGame();
-		return true;
+		return;
 	}
 
-	return false;
-}
 
-void URPGStatusComponent::UpdateStatus()
-{
-	
+	return;
 }
 
 void URPGStatusComponent::AddDefaultStatus(int32 Lv)
@@ -101,17 +121,11 @@ void URPGStatusComponent::AddDefaultStatus(int32 Lv)
     FString RowName = (Owner->ActorHasTag("Boss"))? "Boss" : "Lv"+ FString::FromInt(Lv);
 	FRPGStatus* Row = DefaultTable->FindRow<FRPGStatus>(*RowName , FString() , true);
 
-	if(Row->HP > 0)
+	if(Row)
 	{   
-		OwnerStatus = *Row;
-        Owner->CharStatus = *Row;	
-
-		SaveStatus();
-		
-		if(OnStatusLoaded.IsBoundToObject(Owner))
-		{
-			OnStatusLoaded.Execute();	
-		}
+		Owner->ParentStatus = *Row;
+		Owner->CharStatus = *Row;
+		Owner->ParentStatus = *Row;
        
 	}
 	else
@@ -120,26 +134,18 @@ void URPGStatusComponent::AddDefaultStatus(int32 Lv)
 	}
 }
 
-FRPGStatus URPGStatusComponent::LevelUp()
+void URPGStatusComponent::LevelUp(FRPGStatus& Status)
 {   
 	//UpdateStatus
-    OwnerStatus.HP += 20;
-	OwnerStatus.MP += 10;
-	OwnerStatus.Attack += 5;
-	OwnerStatus.Vitality += 5;
-	OwnerStatus.Agility += 20;
-	OwnerStatus.Exp = OwnerStatus.Exp * 1.2f;
-	OwnerStatus.CharLevel++;
+    Status.HP += 20;
+	Status.MP += 10;
+	Status.Attack += 5;
+	Status.Vitality += 5;
+	Status.Agility += 20;
+	Status.Exp = Status.Exp * 1.2f;
+	Status.CharLevel++;
 
 	SaveStatus();
-
-	ARPGPlayerCharacter* Player = Cast<ARPGPlayerCharacter>(Owner);
-	if(Player && Player->OnLevelUp.IsBound())
-	{
-		Player->OnLevelUp.Broadcast(OwnerStatus.CharLevel);
-	}
-    
-	return OwnerStatus;
 }
 
 

@@ -22,6 +22,9 @@ public:
 
 	FRPGStatus SkillPointRegister;
 
+	UPROPERTY(BlueprintReadOnly, Category = SaveGame)
+	float RemainExp = 0.f;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = SaveGame)
 	TMap<FPrimaryAssetId, FRPGItemData> InventoryData;
 

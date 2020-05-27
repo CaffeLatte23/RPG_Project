@@ -43,27 +43,27 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
     
 	//攻撃中か
-    UPROPERTY(EditAnywhere , BlueprintReadWrite , Category = Combat)
+    UPROPERTY(BlueprintReadWrite , Category = Combat)
 	bool bIsAttack = false;
 
 	//戦闘状態にあるか
-    UPROPERTY(EditAnywhere , BlueprintReadWrite , Category = Combat)
+    UPROPERTY(BlueprintReadWrite , Category = Combat)
 	bool bIsCombat = false;
     
 	//ガード状態か
-	UPROPERTY(EditAnywhere , BlueprintReadWrite , Category = Combat)
+	UPROPERTY(BlueprintReadWrite , Category = Combat)
 	bool bIsGuard = false;
 
     //ガードヒット
-	UPROPERTY(EditAnywhere , BlueprintReadWrite , Category = Combat)
+	UPROPERTY(BlueprintReadWrite , Category = Combat)
 	bool bGuardHit = false;
     
 	//死亡判定
-	UPROPERTY(EditAnywhere , BlueprintReadWrite , Category = Combat)
+	UPROPERTY(BlueprintReadWrite , Category = Combat)
 	bool bIsDead = false;
     
 	//ダメージ判定
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite , Category = Combat)
 	bool bIsDamaged = false;
     
 	//コンボ接続フラグ
@@ -72,6 +72,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite ,  Category = Status)
 	FRPGStatus CharStatus;
+
+	UPROPERTY(BlueprintReadWrite ,  Category = Status)
+	FRPGStatus ParentStatus;
 
 	UPROPERTY(EditAnywhere  , Category = Combo)
 	float ComboPlayRate = 1.0f;
@@ -108,9 +111,6 @@ public:
 	//生存確認
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive();
-
-	UFUNCTION(BlueprintPure , BlueprintCallable , Category = "Status")
-	FRPGStatus GetOwnerStatus();
     
 	//ソケットへのアタッチ　共通処理
 	UFUNCTION(BlueprintCallable , Category = "Weapon")

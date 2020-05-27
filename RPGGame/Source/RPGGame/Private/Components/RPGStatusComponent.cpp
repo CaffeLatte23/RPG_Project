@@ -58,13 +58,12 @@ bool URPGStatusComponent::LoadStatus()
 	//オーナーがプレイヤーならセーブデータからステータスを取得
     if(Cast<ARPGPlayerCharacter>(Owner))
 	{   
-
-		if(PlayerSaveData) 
+		if(PlayerSaveData && PlayerSaveData->PlayerStatus.CharLevel > 0) 
 		{   
 			//データがあれば取得、なければデフォルトで追加したステータスを保存 
 			Owner->ParentStatus = PlayerSaveData->PlayerStatus;	
 			Owner->CharStatus = Owner->ParentStatus;
-
+			
 			if(PlayerSaveData->RemainExp > 0.f)
 			{
 				Owner->CharStatus.Exp = PlayerSaveData->RemainExp;
@@ -123,7 +122,6 @@ void URPGStatusComponent::AddDefaultStatus(int32 Lv)
 
 	if(Row)
 	{   
-		Owner->ParentStatus = *Row;
 		Owner->CharStatus = *Row;
 		Owner->ParentStatus = *Row;
        
@@ -137,13 +135,27 @@ void URPGStatusComponent::AddDefaultStatus(int32 Lv)
 void URPGStatusComponent::LevelUp(FRPGStatus& Status)
 {   
 	//UpdateStatus
-    Status.HP += 20;
-	Status.MP += 10;
-	Status.Attack += 5;
-	Status.Vitality += 5;
-	Status.Agility += 20;
-	Status.Exp = Status.Exp * 1.2f;
-	Status.CharLevel++;
+	if(Status.CharLevel ++ >10)
+	{
+        Status.HP += 20;
+	    Status.MP += 10;
+	    Status.Attack += 5;
+	    Status.Vitality += 5;
+	    Status.Agility += 20;
+	    Status.Exp = Status.Exp * 1.2f;
+	    Status.CharLevel++;
+	}
+	else
+	{
+		FString RowName = "Lv"+ FString::FromInt(Status.CharLevel++);
+	    FRPGStatus* Row = DefaultTable->FindRow<FRPGStatus>(*RowName , FString() , true);
+
+		if(Row)
+		{
+			Status = *Row;
+		}
+	}
+    
 
 	SaveStatus();
 }

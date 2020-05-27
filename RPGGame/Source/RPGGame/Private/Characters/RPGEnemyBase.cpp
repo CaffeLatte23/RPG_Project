@@ -237,6 +237,9 @@ void ARPGEnemyBase::ApplyDamage(AActor* OtherActor)
 
 void ARPGEnemyBase::HitStopHandle()
 {   
+    FVector BackVector = GetActorForwardVector() * (-1.f) * (600.f); 
+    LaunchCharacter(BackVector , true ,true);
+
     float SpawnHeight = this->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
     UGameplayStatics::SpawnEmitterAttached(HitEffect , this->GetMesh() , "TargetPoint");
     UGameplayStatics::SpawnSoundAttached(HitSound , this->GetMesh() , "TargetPoint" , FVector() , FRotator() , EAttachLocation::KeepRelativeOffset , false , 0.3f);
@@ -275,6 +278,7 @@ void ARPGEnemyBase::OnDamaged_Implementation(ARPGCharacterBase* DamageCauser  , 
     }
     CharStatus.HP -= Damage;
     FloatDamageText(Damage,this);
+    HitStopHandle();
 
     UpdateHealth();
 
